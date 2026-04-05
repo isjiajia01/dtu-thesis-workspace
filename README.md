@@ -1,133 +1,92 @@
-# DTU Semester 6 Thesis Workspace
+# DTU Thesis Workspace
 
-Unified workspace for the DTU Semester 6 graduation thesis collaboration with Mover.
+Public-facing thesis workspace for my DTU Master's thesis on **rolling-horizon last-mile delivery optimization**.
 
-## Active workspace structure
+This repository combines three layers of work that were developed together during the project:
 
-This repository now has two active technical layers plus a unified paper workspace:
+- **`22.01paper/`** — the manuscript workspace
+- **`22.03controller_line/`** — the retained controller-oriented thesis line
+- **`22.04fresh_solver/`** — the newer integrated fresh-solver / Julia-first line
 
-- `22.03controller_line/` — retained earlier technical thesis line and paper-facing experiment workspace
-- `22.04fresh_solver/` — current integrated solver workspace for the newer fresh-solver / Julia-first line
-- `22.01paper/` — unified paper workspace containing both the active manuscript and shared paper-planning / writing-guidance docs for `22.03controller_line` and `22.04fresh_solver`
+The goal of publishing this repository is to show the thesis as a real research-and-engineering workspace rather than only a final PDF: manuscript, algorithm development, experiment structure, diagnostics, and supporting ops/scripts live together.
 
-Supporting top-level folders:
+## What this repository shows
 
-- `references/` — reference manuscript snapshots and handoff / workflow guidance
-- `ops/` — operational scripts for build, sync, and HPC submission/pull workflows
-- `deliverables/` — exported shareable artifacts such as HTML dashboards or presentation outputs
-- `archive/` — inactive artifacts that should not be treated as live thesis source material
+- rolling-horizon planning under flexible service days and depot resource constraints
+- a transition from an earlier retained controller line to a newer integrated solver line
+- manuscript writing connected directly to experiment evidence and diagnostic outputs
+- practical research operations: build scripts, HPC sync helpers, figure generation, and workspace conventions
 
-## Folder roles
-
-### `22.03controller_line/`
-Use for:
-- retained experiment code and earlier thesis line
-- configs, scripts, jobs, tests
-- paper-facing technical notes and result organization
-- legacy-but-still-relevant source material that supports the manuscript narrative
-
-### `22.04fresh_solver/`
-Use for:
-- current fresh-solver workspace
-- Julia-first algorithm development
-- benchmark and matrix-backed integrated solver work
-- newer architecture / experiment docs and result summaries
-
-This is the current forward technical workspace.
+## Repository structure
 
 ### `22.01paper/`
-Use for:
-- the active DTU thesis manuscript
-- LaTeX chapters, frontmatter/backmatter, bibliography, build scripts
-- shared paper-planning docs
-- chapter rewrite plans, claim guardrails, experiment writing maps, and figure-build guidance
-- writing-control material that applies across both `22.03controller_line` and `22.04fresh_solver`
+The active thesis manuscript workspace.
 
-This is the main writing target.
+Contains:
+- LaTeX manuscript source
+- chapter rewrite plans and writing-control documents
+- bibliography and frontmatter/backmatter
+- thesis figures and figure-generation recipes
 
-### `references/`
-Use for:
-- older manuscript snapshots such as `references/22.01paper_snapshot/`
-- handoff / workflow guidance documents
-- non-active but still useful contextual material
+### `22.03controller_line/`
+The retained earlier technical line.
 
-Do not use `references/` as the default destination for new work.
+Contains:
+- rolling-horizon experiment code and controller logic
+- historical paper-facing experiment structure
+- supporting docs, configs, job scripts, and tests
 
-### `ops/`
-Use for:
-- manuscript build wrappers
-- sync scripts
-- HPC pull / push / submit helpers
+### `22.04fresh_solver/`
+The current forward technical workspace.
 
-Operational shell scripts should live here instead of cluttering the repository root.
+Contains:
+- integrated fresh-solver development
+- Julia-first solver code
+- OR branch experiment notes and diagnostics
+- selected thesis-relevant run outputs and summaries
 
-### `deliverables/`
-Use for:
-- exported HTML artifacts
-- viewable demos / dashboards / presentation outputs
-- one-off shareable renderings that would otherwise clutter the root or thesis folders
+### Supporting folders
 
-### `archive/`
-Use for:
-- crash dumps
-- inactive diagnostic leftovers
-- stale artifacts that should be preserved but kept out of active source areas
+- **`ops/`** — build, sync, and HPC helper scripts
+- **`deliverables/`** — exported dashboards / HTML artifacts
+- **`references/`** — manuscript snapshots and workflow references
+- **`archive/`** — inactive leftovers that should not be treated as live thesis source material
 
-## Runtime-state policy
+## Suggested reading path
 
-This repository lives in iCloud-synced storage, so heavy runtime state should stay outside the repository under:
+If you want the fastest way to understand the project:
 
-```text
-~/thesis-local-state/dtu-sem6/
-```
-
-For `22.03controller_line/`, the following paths are externalized and linked back with symlinks:
-
-- `.venv`
-- `data/processed`
-- `logs`
-
-`22.04fresh_solver/` currently keeps curated benchmark / matrix assets and selected results in-tree, but bulky runtime-only state should still be externalized if it grows large.
-
-Keep code, docs, configs, and manuscript source in the repository.
-Keep virtualenvs, disposable processed data caches, logs, and other bulky runtime state in `~/thesis-local-state/dtu-sem6/`.
-
-## Practical placement rules
-
-- Retained 22.03 experiment work -> `22.03controller_line/`
-- Current fresh-solver / Julia work -> `22.04fresh_solver/`
-- New manuscript writing -> `22.01paper/`
-- Shared paper-planning / rewrite-control docs -> `22.01paper/`
-- Older paper copies / handoff docs / reference material -> `references/`
-- Build / sync / HPC operational scripts -> `ops/`
-- Exported HTML / visual artifacts -> `deliverables/`
-- Non-active leftovers / dumps -> `archive/`
+1. read this `README.md`
+2. read `WORKSPACE_MAP.md`
+3. inspect `22.01paper/README.md`
+4. inspect `22.04fresh_solver/README.md`
+5. inspect `22.03controller_line/README.md`
 
 ## Build
 
-Build the active thesis manuscript from the repository root with:
+Build the thesis manuscript from the repository root:
 
 ```bash
 ./build_paper.sh
 ```
 
-The root script is a thin wrapper that delegates to:
+This delegates to:
 
 ```bash
 ./ops/build_paper.sh
 ```
 
-which now builds from:
+## Notes on the public snapshot
 
-```bash
-./22.01paper/
-```
+This public repository is a cleaned workspace snapshot.
 
-## Notes
+Excluded from publication:
+- local runtime state such as virtual environments and logs
+- bulky processed-data/runtime caches that are not needed to understand the structure
+- LaTeX build artifacts
+- private signature assets
+- crash dumps
 
-- Treat `22.01paper/` as the canonical unified paper workspace.
-- Treat `22.04fresh_solver/` as the current forward technical workspace.
-- Treat `22.03controller_line/` as retained technical / paper-facing historical support.
-- Treat `references/22.01paper_snapshot/` as the manuscript snapshot reference copy.
-- Before changing sync or runtime placement behavior, read `WORKSPACE_MAP.md`.
-- Before major structural edits, read `AGENTS.md`.
+## Project context
+
+This thesis was carried out at **DTU** in collaboration with **Mover** and is framed as an operational planning problem rather than a purely abstract academic exercise.
