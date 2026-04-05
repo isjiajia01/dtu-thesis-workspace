@@ -1,0 +1,29 @@
+flowchart LR
+    classDef input fill:#F8FAFC,stroke:#CBD5E1,color:#0F172A,stroke-width:1.5px;
+    classDef controller fill:#EEF2FF,stroke:#C7D2FE,color:#4338CA,stroke-width:1.5px;
+    classDef signal fill:#F5F3FF,stroke:#C4B5FD,color:#6D28D9,stroke-width:1.5px;
+    classDef routing fill:#ECFEFF,stroke:#A5F3FC,color:#155E75,stroke-width:1.5px;
+    classDef repair fill:#ECFDF5,stroke:#A7F3D0,color:#0F766E,stroke-width:1.5px;
+    classDef output fill:#FFF7ED,stroke:#FED7AA,color:#C2410C,stroke-width:1.5px;
+    classDef note fill:#FFFFFF,stroke:#FFFFFF,color:#475569;
+
+    I["<b>Input state</b><br/>Visible orders • carryover • customer windows • vehicle capacities • road-network matrices • depot resources"]:::input
+
+    C["<b>1. Controller</b><br/>Admission, protection, clipping<br/>Cross-day risk control<br/>Protected vs risky flex demand"]:::controller
+    S["<b>Bucket-pressure / shadow-price signal</b><br/>15-minute bucket diagnostics<br/>Resource-specific pressure scores<br/>V8.2 softened dynamic price activation"]:::signal
+    R["<b>2. Routing backend</b><br/>Daily route construction<br/>Insertion / trip logic<br/>Depot-aware insertion cost guidance"]:::routing
+    D["<b>3. Depot-repair</b><br/>Bucket diagnostics<br/>Overload reduction<br/>Shift / rollback / refill"]:::repair
+
+    O["<b>Rolling outputs</b><br/>Assigned today • deferred events • deadline failures<br/>depot penalty • overload buckets • next-day state"]:::output
+    N["daily feasible plan + depot feedback"]:::note
+
+    I --> C
+    I --> S
+    C --> S
+    S --> R
+    R --> D
+    D --> S
+    C --> O
+    R --> N
+    N --> O
+    D --> O

@@ -1,0 +1,1 @@
+from .benchmarks import load_instance_from_benchmark

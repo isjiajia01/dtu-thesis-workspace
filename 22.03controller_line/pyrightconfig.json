@@ -1,0 +1,51 @@
+{
+    "$schema": "https://raw.githubusercontent.com/microsoft/pyright/main/packages/pyright/schema/pyrightconfig.schema.json",
+    "include": ["code", "scripts", "src", "tests"],
+    "exclude": [
+        "**/__pycache__",
+        ".pytest_cache",
+        "data",
+        "logs",
+        "results",
+        "jobs",
+        "hpc_jobs"
+    ],
+    "ignore": [
+        "tests",
+        "code/simulation/rolling_horizon_integrated.py",
+        "code/experiments/exp00_bau_baseline.py",
+        "code/experiments/exp01_crunch_r04_baseline.py",
+        "scripts/runner/master_runner.py"
+    ],
+    "pythonVersion": "3.11",
+    "typeCheckingMode": "basic",
+    "useLibraryCodeForTypes": true,
+    "reportMissingTypeStubs": "none",
+    "reportMissingImports": "none",
+    "reportMissingModuleSource": "none",
+    "reportImplicitRelativeImport": "none",
+    "reportConstantRedefinition": "none",
+    "reportUninitializedInstanceVariable": "none",
+    "reportUnknownVariableType": "none",
+    "reportUnknownMemberType": "none",
+    "reportUnknownArgumentType": "none",
+    "reportUnknownParameterType": "none",
+    "reportUnknownLambdaType": "none",
+    "reportUnknownImportSymbol": "none",
+    "reportInvalidTypeArguments": "none",
+    "reportUnusedCallResult": "none",
+    "executionEnvironments": [
+        {
+            "root": ".",
+            "extraPaths": [".", "code", "src"]
+        },
+        {
+            "root": "scripts",
+            "extraPaths": [".", "code", "src"]
+        },
+        {
+            "root": "code",
+            "extraPaths": [".", "code", "src"]
+        }
+    ]
+}

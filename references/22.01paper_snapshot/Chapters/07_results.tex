@@ -1,0 +1,417 @@
+\chapter{Results}
+\label{chap:results}
+
+This chapter is intentionally structured as a \emph{results-writing plan} for the final thesis draft.
+Its purpose is to fix the narrative order, the evidence hierarchy, and the claim boundaries before the final quantitative tables and figures are inserted.
+The chapter should be written as a progression from baseline operating regimes to the retained controller line, and then to generalization and limitations-aware interpretation.
+
+\section{Chapter purpose and writing order}
+\label{sec:results-purpose}
+
+The chapter should answer the following questions in order:
+
+\begin{enumerate}
+    \item What does normal operation look like under the retained benchmark setup?
+    \item How much does performance degrade under the retained crunch setting?
+    \item Within the crunch setting, how does the controller line improve from early to late versions?
+    \item Why is \texttt{v6g\_v6d\_compute300} the retained final thesis candidate?
+    \item How much of the final result appears to transfer across depots?
+    \item What does the retained runtime-policy follow-up show?
+    \item What changes when the retained policy is moved to the larger \texttt{DATA003} east/west depots?
+    \item What should \emph{not} be claimed from the current evidence?
+\end{enumerate}
+
+The final writing order should therefore remain:
+
+\begin{enumerate}
+    \item \texttt{EXP00} normal reference
+    \item \texttt{EXP01} crunch baseline degradation
+    \item \texttt{Scenario1} controller progression:
+    \begin{enumerate}
+        \item \texttt{v2}
+        \item \texttt{v4}
+        \item \texttt{v5}
+        \item \texttt{v6f}
+        \item \texttt{v6g}
+    \end{enumerate}
+    \item OOD depot validation for the retained final controller
+    \item Runtime-policy follow-up
+    \item Auxiliary \texttt{DATA003} scaling evidence
+    \item Counterexample and non-mainline variants
+    \item Synthesis and cautious interpretation
+\end{enumerate}
+
+\section{Baseline regime comparison: \texttt{EXP00} vs \texttt{EXP01}}
+\label{sec:results-baselines}
+
+\subsection{\texttt{EXP00}: normal-operation reference}
+\label{sec:results-exp00}
+
+This subsection should establish the non-stressed reference level of the retained system.
+It should describe the expected performance envelope under normal operations and define the baseline interpretation for later comparisons.
+
+\paragraph{What to show.}
+Insert the following evidence types:
+\begin{itemize}
+    \item aggregate table for service rate, failed orders, penalized cost, and runtime across seeds;
+    \item short textual summary of the normal operating regime;
+    \item one compact figure or table showing day-level stability if this helps anchor later comparison.
+\end{itemize}
+
+\paragraph{What to argue.}
+The purpose here is not to claim novelty, but to define the operational reference point against which the crunch regime will be judged.
+The current aggregate evidence supports a near-perfect normal-operation envelope on the retained Herlev benchmark and very high BAU performance on the larger \texttt{DATA003} depots.
+In the current 10-seed aggregates, the retained Herlev \texttt{EXP00} baseline achieves `100\%` service rate, `0.0` failed orders, and penalized cost `6650.63`, while the \texttt{DATA003 west} BAU variants also reach `100\%` service rate and `0` average failed orders.
+
+\paragraph{Writing constraint.}
+Do not over-interpret \texttt{EXP00}. It is a reference regime, not a mechanism proof.
+
+\subsection{\texttt{EXP01}: crunch baseline degradation}
+\label{sec:results-exp01}
+
+This subsection should quantify the retained pressure setting and explain how the system degrades relative to \texttt{EXP00}.
+
+\paragraph{What to show.}
+Insert:
+\begin{itemize}
+    \item direct side-by-side comparison of \texttt{EXP00} and \texttt{EXP01};
+    \item mean differences in service rate, failed orders, and penalized cost;
+    \item if useful, a small day-profile figure showing where the degradation becomes visible.
+\end{itemize}
+
+\paragraph{What to argue.}
+This subsection should establish that \texttt{EXP01} is the retained thesis pressure regime.
+It defines the stress context under which the controller line is evaluated.
+On the retained Herlev benchmark, the current 10-seed aggregate shows that \texttt{EXP01} baseline performance falls to `96.7816\%` service rate with `33.6` average failed orders and penalized cost `11427.01`, relative to the \texttt{EXP00} reference of `100\%`, `0.0`, and `6650.63`.
+This corresponds to a `-3.2184` percentage-point service-rate drop, `+33.6` failed orders, and `+4776.38` penalized cost.
+
+\paragraph{Writing constraint.}
+The comparison should be framed as a regime comparison, not as a causal proof of why degradation occurs.
+
+\section{Main method line within \texttt{EXP01 / Scenario1}}
+\label{sec:results-scenario1}
+
+This section is the core of the chapter.
+It should present the retained controller progression as the main method narrative:
+\[
+\texttt{v2} \rightarrow \texttt{v4} \rightarrow \texttt{v5} \rightarrow \texttt{v6f} \rightarrow \texttt{v6g}.
+\]
+
+The section should use a consistent KPI set throughout:
+\begin{itemize}
+    \item service rate,
+    \item failed orders,
+    \item penalized cost,
+    \item runtime or compute budget context,
+    \item selected day-level or failure-profile diagnostics where needed.
+\end{itemize}
+
+\subsection{From \texttt{v2} to \texttt{v4}: commitment logic}
+\label{sec:results-v2-v4}
+
+This subsection should explain the first major retained improvement step.
+
+\paragraph{What to show.}
+\begin{itemize}
+    \item comparison table: \texttt{v2} vs \texttt{v4};
+    \item a short interpretation of the shift from earlier robust control to event-driven commitment logic;
+    \item one diagnostic if available showing why \texttt{v4} improves the mainline outcome.
+\end{itemize}
+
+\paragraph{What to argue.}
+The main claim should be that event-driven commitment improves the retained \texttt{Scenario1} line relative to the earlier failure-first baseline.
+
+\paragraph{Writing constraint.}
+Do not claim that this step alone solves the stress setting.
+It should be presented as an early but important improvement.
+
+\subsection{From \texttt{v4} to \texttt{v5}: risk-budgeted improvement}
+\label{sec:results-v4-v5}
+
+This subsection should explain why the thesis line moves from commitment logic to a more structured risk-budgeted controller.
+
+\paragraph{What to show.}
+\begin{itemize}
+    \item comparison table: \texttt{v4} vs \texttt{v5};
+    \item one concise interpretation of how admission / commitment / release logic changes;
+    \item optional failure-profile summary if it clarifies the gain.
+\end{itemize}
+
+\paragraph{What to argue.}
+The safe result interpretation is that \texttt{v5} improves the retained main line and brings the controller closer to the final performance envelope.
+In the current aggregate, \texttt{v5\_compute300} reaches `97.3659\%` service rate and `27.5` failed orders, improving on \texttt{v4\_compute300} at `97.1264\%` and `30.0`.
+
+\paragraph{Writing constraint.}
+Avoid inflating this step into a final solution.
+It is an intermediate retained milestone.
+
+\subsection{From \texttt{v5} to \texttt{v6f}: execution-aware transition}
+\label{sec:results-v5-v6f}
+
+This subsection is important because it marks the mechanism transition in the retained storyline.
+
+\paragraph{What to show.}
+\begin{itemize}
+    \item comparison table: \texttt{v5} vs \texttt{v6f};
+    \item evidence that deadline-day drops or execution-related failures become better controlled;
+    \item one diagnostic or case interpretation if available.
+\end{itemize}
+
+\paragraph{What to argue.}
+The main point is not only that \texttt{v6f} improves the KPI line, but that it changes the interpretation of the remaining gap.
+At this stage the bottleneck should be written as increasingly execution-aware rather than purely phase/value-selection driven.
+The current 10-seed aggregate supports this transition: \texttt{v6f\_compute300} reaches `97.8161\%` service rate with `22.8` failed orders, while the \texttt{v6f\_v6d\_compute300} refit remains close at `97.7969\%` and `23.0`.
+
+\paragraph{Writing constraint.}
+Do not over-claim a full causal decomposition.
+The safe wording is that \texttt{v6f} is the retained transition step that motivates the final \texttt{v6g} refinement.
+
+\subsection{From \texttt{v6f} to \texttt{v6g}: final retained controller}
+\label{sec:results-v6f-v6g}
+
+This subsection is the climax of the results chapter and should make clear why \texttt{v6g} is the retained final thesis candidate.
+
+\paragraph{What to show.}
+\begin{itemize}
+    \item final ranking table including at least \texttt{v6f} and the retained \texttt{v6g} endpoint;
+    \item exact headline KPI values for the retained final candidate;
+    \item short explanation of the role of deadline reservation in the final improvement;
+    \item optional figure highlighting the remaining gap closure on the main depot.
+\end{itemize}
+
+\paragraph{What to argue.}
+The final safe claim should identify one canonical main candidate and then separate supplementary follow-ups:
+\begin{quote}
+Among the retained Herlev mainline controllers, \texttt{v6g\_v6d\_compute300} is the final paper-facing thesis candidate, reaching `97.9885\%` service rate with `21.0` average failed orders.
+The \texttt{cap05} rollback and \texttt{automode} results can be reported as supplementary engineering follow-ups, but they should not replace the canonical mainline endpoint in the core ranking.
+\end{quote}
+
+\paragraph{Writing constraint.}
+Do not generalize this into a universal proof of optimality, physical capacity saturation, or causal completeness.
+Keep the statement scoped to the retained experimental setting.
+
+\section{Final ranking and retained endpoint summary}
+\label{sec:results-final-ranking}
+
+This section should consolidate the retained mainline comparison into one compact ranking table and one short interpretive paragraph.
+
+\paragraph{Required content.}
+Include a table with the retained top endpoints, ideally:
+\begin{itemize}
+    \item \texttt{v6g\_v6d\_compute300} as the final main candidate,
+    \item \texttt{v6f} as the key transition comparator.
+    \item \texttt{v5} as the last clearly pre-\texttt{v6f} retained comparator.
+\end{itemize}
+
+\paragraph{Interpretive goal.}
+This section should let the reader leave the mainline comparison with a single clear conclusion:
+the thesis line converges on \texttt{v6g\_v6d\_compute300}, not because every historical variant was inferior in every respect, but because it provides the cleanest retained mechanism closure under the writing-safe scope.
+
+\section{OOD depot validation}
+\label{sec:results-ood}
+
+This section should present the cross-depot validation of the retained final controller.
+
+\subsection{Purpose of the OOD study}
+\label{sec:results-ood-purpose}
+
+The OOD subsection is not meant to redefine the whole thesis.
+Its purpose is to test whether the retained final controller remains strong when the depot changes while the scenario logic is held fixed.
+
+\subsection{What to show}
+\label{sec:results-ood-evidence}
+
+Insert:
+\begin{itemize}
+    \item a compact table for Aalborg, Odense, and Aabyhoj;
+    \item service rate and failed orders for the retained final controller;
+    \item one sentence reminding the reader that this is an OOD validation under the retained \texttt{Scenario1} framing.
+\end{itemize}
+
+\subsection{What to argue}
+\label{sec:results-ood-argument}
+
+The safe claim is that the retained \texttt{v6g\_v6d\_compute300} endpoint demonstrates strong transfer under the tested depot shifts.
+The current 10-seed aggregates support `100\%` service rate and `0` failed orders on Aalborg, Odense, and Aabyhoj.
+The associated penalized costs are `235.24` for Aalborg, `376.69` for Odense, and `399.63` for Aabyhoj.
+
+\subsection{Writing constraint}
+\label{sec:results-ood-constraint}
+
+Do not turn this into a universal generalization claim.
+It supports robustness and transfer within the tested depots, not a proof of universal deployment behavior.
+If the `cap05 / dyn60 / dyn90` OOD sweeps are mentioned, they should be explicitly labeled as `5`-seed supplementary sensitivity checks rather than primary evidence.
+
+\section{Runtime-Policy Follow-Up}
+\label{sec:results-runtime-policy}
+
+This section should remain clearly subordinate to the retained Herlev mainline.
+Its purpose is not to redefine the final controller, but to show how a practical runtime-policy wrapper behaves when the retained \texttt{v6g\_v6d} controller is already fixed.
+
+\subsection{What to show}
+\label{sec:results-runtime-show}
+
+Insert:
+\begin{itemize}
+    \item a compact comparison between \texttt{v6g\_automode} and \texttt{v6g\_fixed300\_control};
+    \item one short explanation of the mode selector: \texttt{dyn60}, \texttt{dyn90}, and \texttt{fixed300};
+    \item one sentence clarifying that the current implementation is an engineering runtime-policy layer rather than a new controller family.
+\end{itemize}
+
+\subsection{What to argue}
+\label{sec:results-runtime-argue}
+
+The safe claim is that \texttt{automode} is the sole retained dynamic-time follow-up.
+It can be used to show how runtime is adapted to pressure signals, but it should not displace \texttt{v6g\_v6d\_compute300} as the thesis main candidate.
+If numbers are reported, they should be framed as supplementary Herlev evidence: the current 10-seed aggregate for \texttt{automode} reaches `98.1992\%` service rate with `18.8` failed orders, while the \texttt{cap05} fixed-\num{300} rollback reaches `98.3238\%` with `17.5`.
+
+\subsection{Writing constraint}
+\label{sec:results-runtime-constraint}
+
+Do not present \texttt{automode} as the final method contribution.
+Do not claim that the current runtime selector already constitutes a fully general intelligent compute allocator; in the present implementation it is a retained engineering rule layer driven by pressure signals.
+
+\section{Auxiliary \texttt{DATA003} Scaling Evidence}
+\label{sec:results-data003}
+
+This section should remain secondary to the retained Herlev mainline.
+Its purpose is to show how the retained policy family behaves on the larger \texttt{DATA003} east/west depots under the same \texttt{EXP00} / \texttt{EXP01} regime logic.
+
+\subsection{What to show}
+\label{sec:results-data003-show}
+
+Insert:
+\begin{itemize}
+    \item one compact BAU table for \texttt{DATA003 east} and \texttt{west};
+    \item one compact crunch table for \texttt{DATA003 east} and \texttt{west};
+    \item one sentence highlighting that `best service rate` and `lowest penalized cost` coincide on some lines but not on others.
+\end{itemize}
+
+\subsection{What to argue}
+\label{sec:results-data003-argue}
+
+The safe interpretation is instance-dependent.
+For \texttt{DATA003 east}, the retained auxiliary line is the \texttt{east-dyn90} run, which reaches `99.8898\%` service rate, `3.6` failed orders, and penalized cost `59911.87`.
+For \texttt{DATA003 west}, the retained auxiliary line is the \texttt{west-w16h} run, which reaches `99.4748\%` service rate, `23.9` failed orders, and penalized cost `181414.89`.
+These two lines should be written as controlled auxiliary evidence for larger-depot behavior, not as a second multi-branch ranking problem.
+
+\subsection{Writing constraint}
+\label{sec:results-data003-constraint}
+
+Do not rank \texttt{DATA003 east/west} together with the retained Herlev mainline in a single best-model table.
+Do not use partially completed endpoints as final evidence; in particular, the current \texttt{w16h\_dyn90} east run and the two west probe directories without \texttt{summary\_final.json} should remain outside paper-facing aggregate claims.
+
+\section{Counterexamples, excluded lines, and non-mainline variants}
+\label{sec:results-counterexamples}
+
+This section should remain brief and controlled.
+Its purpose is to show disciplined selection of the final thesis line.
+
+\subsection{\texttt{v6b3} as a counterexample}
+\label{sec:results-v6b3}
+
+The key safe interpretation is that diversification can improve stress-side robustness while still failing to become the retained best mainline controller.
+This subsection should therefore be written explicitly as a counterexample, not as a competing final endpoint.
+
+\subsection{\texttt{v6h} as follow-up, not thesis endpoint}
+\label{sec:results-v6h}
+
+If mentioned, \texttt{v6h} should appear only as a narrow solver-side follow-up.
+It should not be written as a required part of the final thesis contribution.
+
+\subsection{Historical or removed lines}
+\label{sec:results-historical-lines}
+
+Other historical variants should be omitted or summarized in one sentence at most.
+The chapter should stay focused on the retained mainline story.
+
+\section{Cross-section synthesis}
+\label{sec:results-synthesis}
+
+This section should summarize the chapter in three layers.
+
+\subsection{Operational layer}
+\label{sec:results-synthesis-operational}
+
+State how the retained system behaves under:
+\begin{itemize}
+    \item normal operation,
+    \item crunch degradation,
+    \item controller improvement under stress.
+\end{itemize}
+
+\subsection{Method layer}
+\label{sec:results-synthesis-method}
+
+State how the retained method progression should be interpreted:
+\begin{itemize}
+    \item \texttt{v2} establishes the early robust baseline,
+    \item \texttt{v4} improves commitment logic,
+    \item \texttt{v5} strengthens risk-budgeted control,
+    \item \texttt{v6f} marks the execution-aware transition,
+    \item \texttt{v6g} closes the retained mainline and becomes the final candidate.
+\end{itemize}
+
+\subsection{Evidence layer}
+\label{sec:results-synthesis-evidence}
+
+State explicitly that the chapter supports:
+\begin{itemize}
+    \item a retained best mainline endpoint,
+    \item a strong tested OOD outcome,
+    \item a retained runtime-policy follow-up that remains secondary to the main controller line,
+    \item auxiliary \texttt{DATA003} scaling evidence with regime-dependent behavior,
+    \item a disciplined distinction between mainline and non-mainline variants.
+\end{itemize}
+
+\section{Writing guardrails for the final draft}
+\label{sec:results-guardrails}
+
+The final version of this chapter must respect the following rules:
+
+\begin{enumerate}
+    \item Do not write \texttt{v6b3} as the best model.
+    \item Do not write \texttt{v6c} as an active valid route.
+    \item Do not write \texttt{v6h} as the final thesis result unless the retained writing map is explicitly updated.
+    \item Do not use \texttt{EXP00} and \texttt{EXP01} as causal mechanism proof; use them as retained regime definitions.
+    \item Do not write the current model-side execution limit as a proven real-world physical limit.
+    \item Do not promote \texttt{cap05} or \texttt{automode} into the main controller ranking.
+    \item Do not rank \texttt{DATA003 east/west} and Herlev in the same final-controller table.
+    \item Do not use partially completed endpoints as paper-facing final evidence.
+    \item Keep the chapter centered on the retained order:
+    \[
+    \begin{aligned}
+    \texttt{EXP00} &\rightarrow \texttt{EXP01} \rightarrow \texttt{v2} \rightarrow \texttt{v4} \rightarrow \texttt{v5} \\
+    &\rightarrow \texttt{v6f} \rightarrow \texttt{v6g\_v6d\_compute300} \rightarrow \text{OOD} \\
+    &\rightarrow \text{runtime-policy} \rightarrow \texttt{DATA003}.
+    \end{aligned}
+    \]
+\end{enumerate}
+
+\section{Items to insert during final drafting}
+\label{sec:results-todo}
+
+Before this chapter is finalized, insert the following:
+
+\begin{itemize}
+    \item final baseline table for \texttt{EXP00} and \texttt{EXP01};
+    \item controller-line comparison table for \texttt{v2}, \texttt{v4}, \texttt{v5}, \texttt{v6f}, and \texttt{v6g};
+    \item final ranking table with the retained top endpoints;
+    \item OOD depot table for Aalborg, Odense, and Aabyhoj;
+    \item one compact auxiliary table for \texttt{DATA003 east/west} BAU and crunch results;
+    \item one compact figure for baseline regime comparison;
+    \item one compact figure for controller progression;
+    \item optional diagnostic figure for failure-profile or day-level improvement if it helps explain the \texttt{v5} to \texttt{v6f} to \texttt{v6g} transition.
+\end{itemize}
+
+\section{Closing paragraph template}
+\label{sec:results-closing-template}
+
+The chapter should end with a short synthesis paragraph close to the following logic:
+
+\begin{quote}
+The retained evidence shows a clear progression from normal-operation reference to crunch degradation and then to systematic controller improvement within the retained \texttt{Scenario1} line.
+Among the documented Herlev endpoints, \texttt{v6g\_v6d\_compute300} is the canonical retained thesis candidate, while \texttt{cap05} and \texttt{automode} remain secondary engineering follow-ups.
+The tested OOD results suggest strong transfer across the evaluated depots, and the retained \texttt{DATA003} east/west lines provide controlled auxiliary evidence on larger instances.
+At the same time, the evidence should be interpreted conservatively: it supports strong retained endpoints under the modeled settings, not a universal proof of physical-optimal operation.
+\end{quote}

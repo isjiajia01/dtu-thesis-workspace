@@ -1,0 +1,33 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local runtime state
+**/.venv/
+**/logs/
+**/data/processed/
+
+# LaTeX build artifacts
+22.01paper/main.aux
+22.01paper/main.bbl
+22.01paper/main.bcf
+22.01paper/main.blg
+22.01paper/main.fdb_latexmk
+22.01paper/main.fls
+22.01paper/main.log
+22.01paper/main.out
+22.01paper/main.pdf
+22.01paper/main.run.xml
+22.01paper/main.synctex.gz
+22.01paper/main.toc
+22.01paper/main.xdv
+
+# Local/private assets not for public sync
+22.01paper/Pictures/signature.png
+
+# Crash dumps
+archive/crash-dumps/core.*

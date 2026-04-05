@@ -1,0 +1,284 @@
+\chapter{Literature Review}
+\label{chap:literature_review}
+
+This chapter reviews the bodies of literature that frame the thesis problem and motivate the methodological choices made later in the dissertation. The review should not read as an isolated catalogue of papers. Instead, it should progressively narrow from broad vehicle-routing literature toward the specific research gap addressed by this thesis: rolling-horizon multi-day delivery planning with flexible service windows, operational resource constraints, execution uncertainty, and stability-aware decision making.
+
+\section{Chapter Goal and Reading Logic}
+
+The purpose of this chapter is to position the thesis against existing work in operations research, dynamic routing, and rolling-horizon control. The writing should follow a narrowing logic:
+
+\begin{enumerate}
+    \item start from classical vehicle routing and rich VRP variants,
+    \item move to dynamic and online routing settings,
+    \item review rolling-horizon planning and multi-period decision making,
+    \item discuss robustness, uncertainty, and execution-aware control,
+    \item review plan stability and replanning costs,
+    \item conclude with the precise research gap that this thesis addresses.
+\end{enumerate}
+
+The chapter should make clear that this thesis is not only about solving a static VRP more efficiently. Its contribution sits at the intersection of:
+
+\begin{itemize}
+    \item multi-day delivery planning,
+    \item online or partially observed demand revelation,
+    \item limited daily computational budgets,
+    \item interaction between order selection and intra-day routing feasibility,
+    \item operational realism such as depot resource constraints and execution limits,
+    \item plan stability under repeated replanning.
+\end{itemize}
+
+\section{Classical Vehicle Routing and Rich VRP Foundations}
+
+\subsection{Classical VRP and VRPTW}
+
+This subsection should briefly review the canonical VRP literature as the baseline foundation for the thesis. The purpose is not to re-explain standard material in excessive detail, but to establish:
+
+\begin{itemize}
+    \item the historical role of the Capacitated VRP and the VRP with Time Windows,
+    \item the standard objectives of travel minimization and service feasibility,
+    \item why a single-day static formulation is insufficient for the operational setting considered in this thesis.
+\end{itemize}
+
+Writing targets for this subsection:
+
+\begin{itemize}
+    \item define the standard routing abstraction,
+    \item summarize the importance of time windows and vehicle capacities,
+    \item explain that classical models assume a fixed set of customers is known when optimization starts,
+    \item use this as the contrast point for later dynamic and rolling-horizon models.
+\end{itemize}
+
+\subsection{Rich VRP Variants}
+
+This subsection should review richer variants of the routing problem that incorporate more realistic constraints. The review should be selective and directly connected to the thesis. Relevant dimensions include:
+
+\begin{itemize}
+    \item heterogeneous fleet,
+    \item multi-dimensional capacities,
+    \item multi-trip routing,
+    \item depot and warehouse constraints,
+    \item multi-period or multi-day delivery settings,
+    \item assignment-routing coupling.
+\end{itemize}
+
+The key argument to build here is:
+
+\begin{quote}
+Classical VRP models are a necessary starting point, but realistic delivery operations often require richer formulations that capture operational coupling beyond route construction alone.
+\end{quote}
+
+This is the right place to connect to the broader formulation work from the research backbone and to explain that the thesis problem belongs to the family of rich, operationally constrained routing problems rather than to a simplified benchmark-only setting.
+
+\section{Dynamic and Online Vehicle Routing}
+
+\subsection{Dynamic VRP}
+
+This subsection should review dynamic VRP literature in which requests arrive over time or information is only partially known at the time of decision making. Core themes to cover:
+
+\begin{itemize}
+    \item distinction between static and dynamic routing,
+    \item arrival of new requests during operations,
+    \item need for re-optimization during execution,
+    \item tension between immediate action and anticipation of future requests.
+\end{itemize}
+
+The discussion should explain that this thesis shares the dynamic spirit of that literature, but differs in two important ways:
+
+\begin{enumerate}
+    \item the decision process is organized at a daily rolling-horizon level rather than only at the instant dispatch level,
+    \item the problem includes cross-day service-window decisions in addition to same-day routing.
+\end{enumerate}
+
+\subsection{Online Decision Making and Partial Information}
+
+This subsection should focus more explicitly on online decision making, including:
+
+\begin{itemize}
+    \item incomplete information,
+    \item visibility restricted to released orders,
+    \item trade-offs between serving now and waiting,
+    \item myopic versus anticipatory policies.
+\end{itemize}
+
+This is an important bridge subsection because it motivates the thesis controller layer. The narrative should build toward the idea that a routing solver alone is not enough when the main question is also \emph{which orders to attempt today} under future uncertainty and limited execution capacity.
+
+\section{Rolling-Horizon and Multi-Period Planning}
+
+\subsection{Rolling-Horizon Optimization}
+
+This subsection should review rolling-horizon planning as a generic decision paradigm. Relevant themes include:
+
+\begin{itemize}
+    \item solve over a look-ahead window,
+    \item commit only near-term decisions,
+    \item roll the horizon forward and re-optimize,
+    \item balance current performance with future flexibility.
+\end{itemize}
+
+This is one of the most central literature blocks for the thesis. The chapter should make clear that the thesis is naturally framed as rolling-horizon control because:
+
+\begin{itemize}
+    \item new information arrives over time,
+    \item only the current day can be fully committed,
+    \item future-day plans must remain adjustable,
+    \item day-assignment and routing decisions interact.
+\end{itemize}
+
+\subsection{Multi-Period and Multi-Day Delivery Planning}
+
+This subsection should narrow further to literature that explicitly handles multi-period logistics and service windows over several days. The review should emphasize:
+
+\begin{itemize}
+    \item delivery-date assignment,
+    \item coupling of assignment and routing,
+    \item service-window flexibility,
+    \item repeated planning over a horizon of days,
+    \item trade-offs between local daily optimization and horizon-wide quality.
+\end{itemize}
+
+A key writing goal here is to show that the thesis problem is neither a pure inventory problem nor a pure one-day routing problem, but a hybrid planning problem where decisions about \emph{when} to serve and \emph{how} to serve are tightly linked.
+
+\section{Robustness, Uncertainty, and Anticipatory Control}
+
+\subsection{Stochastic and Robust Routing Perspectives}
+
+This subsection should review literature dealing with uncertainty in routing and delivery systems, including:
+
+\begin{itemize}
+    \item stochastic customer arrivals or demand,
+    \item uncertain travel times,
+    \item uncertain execution outcomes,
+    \item robust optimization and risk-aware planning,
+    \item scenario-based decision support.
+\end{itemize}
+
+The goal is not to claim that the thesis solves a full stochastic program. Instead, the chapter should position the thesis as adopting a practical middle ground:
+
+\begin{itemize}
+    \item uncertainty is acknowledged explicitly,
+    \item future conditions are anticipated rather than ignored,
+    \item decision logic is shaped by risk and execution pressure,
+    \item the final method remains computationally operational.
+\end{itemize}
+
+\subsection{Execution-Aware and Resource-Aware Planning}
+
+This subsection is especially important for distinguishing the thesis from more solver-centric baselines. The review should cover literature or themes related to:
+
+\begin{itemize}
+    \item mismatch between nominal and effective capacity,
+    \item operational frictions in logistics execution,
+    \item depot throughput or loading constraints,
+    \item planning under realistic execution bottlenecks,
+    \item decision support that accounts for execution risk rather than only nominal feasibility.
+\end{itemize}
+
+This subsection should prepare the ground for the thesis claim that dispatch quality is shaped not only by route optimization strength, but also by whether the controller correctly estimates what can actually be executed under pressure.
+
+\section{Plan Stability, Replanning, and Operational Usability}
+
+\subsection{Stability in Repeated Planning}
+
+This subsection should review literature on solution stability, nervousness, replanning costs, and related concepts. Relevant themes:
+
+\begin{itemize}
+    \item instability caused by repeated re-optimization,
+    \item value of preserving plan consistency,
+    \item penalties for assignment or sequence changes,
+    \item operational consequences of excessive churn.
+\end{itemize}
+
+This is a distinctive part of the thesis and should not be treated as a minor side note. The review should argue that repeated replanning can degrade operational usability even when nominal cost improves.
+
+\subsection{Why Stability Matters for This Thesis}
+
+After the broader review, this subsection should make the thesis-specific connection:
+
+\begin{itemize}
+    \item future-day plans are tentative and will be revised,
+    \item uncontrolled replanning may cause unnecessary assignment changes,
+    \item the thesis therefore considers stability-aware logic and plan churn as meaningful evaluation dimensions,
+    \item this adds practical relevance beyond cost and service rate alone.
+\end{itemize}
+
+This subsection is the right place to position plan stability as an operational criterion that complements feasibility and service performance.
+
+\section{Methodological Positioning of the Thesis}
+
+This section should synthesize the literature review and clearly position the thesis. It should explain that the thesis draws from several literature streams but is not fully captured by any one of them:
+
+\begin{itemize}
+    \item from rich VRP, it inherits operational constraint realism,
+    \item from dynamic and online VRP, it inherits partial information and repeated decision making,
+    \item from rolling-horizon planning, it inherits the commit-now / revise-later structure,
+    \item from robust and stochastic planning, it inherits anticipation and risk awareness,
+    \item from stability-aware planning, it inherits concern for replanning quality and operational consistency.
+\end{itemize}
+
+The section should then articulate the thesis perspective:
+
+\begin{quote}
+The core problem is not merely to optimize routes on a given day, but to control a rolling multi-day delivery process in which order selection, routing feasibility, execution pressure, and future flexibility are interdependent.
+\end{quote}
+
+\section{Research Gap}
+
+This section should end the literature review with a precise gap statement. The gap should not be phrased vaguely as ``more research is needed.'' Instead, it should identify the thesis niche directly.
+
+A possible structure for the gap statement is:
+
+\begin{enumerate}
+    \item Classical and even many rich VRP models remain primarily static or day-local.
+    \item Dynamic routing literature often focuses on instantaneous online dispatch rather than multi-day service-window control.
+    \item Rolling-horizon studies do not always integrate realistic execution bottlenecks and depot-side operational constraints.
+    \item Solver-centric baselines are often insufficient when the key decision is also which orders should be attempted today.
+    \item Stability and plan churn are operationally important but are often secondary in routing evaluation.
+\end{enumerate}
+
+From these points, the chapter should state that this thesis addresses the gap by studying a rolling-horizon multi-day delivery problem in which:
+
+\begin{itemize}
+    \item orders have flexible service windows,
+    \item the system sees only partially revealed demand,
+    \item each day requires both admission-style and routing decisions,
+    \item depot and execution constraints materially affect feasibility,
+    \item policy quality must be judged not only by service and cost, but also by stability and robustness.
+\end{itemize}
+
+\section{Planned Closing Paragraph}
+
+The chapter should end with a short transition paragraph that connects directly to the next chapter. A target form is:
+
+\begin{quote}
+The reviewed literature establishes the need for a planning framework that goes beyond static day-level routing and instead integrates multi-day flexibility, rolling re-optimization, operational realism, and execution-aware control. The next chapter formalizes the problem setting used in this thesis and specifies the assumptions, decision structure, and evaluation criteria adopted in the empirical study.
+\end{quote}
+
+\section{Writing Notes for the Final Draft}
+
+When converting this plan into a final literature review chapter, the following writing rules should be followed:
+
+\begin{itemize}
+    \item avoid a paper-by-paper summary structure,
+    \item organize the review by research themes and conceptual tensions,
+    \item explicitly compare each literature stream to the thesis problem,
+    \item keep the narrowing logic visible throughout the chapter,
+    \item ensure the final research gap matches the retained thesis line,
+    \item do not oversell novelty by ignoring related dynamic or rolling-horizon work,
+    \item do not let the literature review drift into methodology details better reserved for later chapters.
+\end{itemize}
+
+\section{Citation Collection Checklist}
+
+Before finalizing this chapter, make sure the bibliography covers the following groups of references:
+
+\begin{enumerate}
+    \item foundational VRP and VRPTW papers or surveys,
+    \item rich VRP surveys covering heterogeneous fleet and related operational extensions,
+    \item dynamic and online VRP reviews,
+    \item rolling-horizon planning papers in routing or logistics,
+    \item robust or stochastic planning references relevant to anticipatory dispatch,
+    \item papers discussing stability, nervousness, or replanning costs,
+    \item recent applied logistics studies with realistic operational constraints.
+\end{enumerate}
+
+This checklist should guide the final citation pass but should not appear in the final polished version unless intentionally retained as an internal drafting aid.

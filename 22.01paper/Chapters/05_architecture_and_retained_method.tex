@@ -1,0 +1,85 @@
+\chapter{Diagnostic Transition and Integrated Architecture}
+\label{chap:architecture_retained_method}
+
+% Writing objective:
+% This chapter should bridge the retained controller line and the newer integrated solver line.
+% It should first explain the large-instance diagnostic finding, then introduce the integrated
+% controller-routing-repair architecture that follows from that diagnosis.
+
+% ============================================================
+\section{Retained execution architecture in the controller-centered line}
+% Write here:
+% - Briefly summarize the operational architecture behind 22.03controller_line.
+% - Explain controller + daily backend + experiment workflow at a high level.
+% - Keep this concise; the focus is on why this architecture was useful and what it exposed.
+%
+% Good source material:
+% - 22.03controller_line/docs/architecture.md
+% - 22.03controller_line/scripts/
+% - 22.03controller_line/code/
+
+\section{Diagnostic audit on large-scale instances}
+% Write here:
+% - Introduce West as the critical audit case.
+% - Explain why a deeper diagnosis became necessary.
+% - Present the logic of bucket-level diagnostics.
+%
+% Good source material:
+% - 22.04fresh_solver/docs/OR支线实验_v7.md
+% - 22.04fresh_solver/results/diagnostics/west_or_v7_picking_buckets.csv
+% - 22.04fresh_solver/results/diagnostics/west_or_v7_picking_summary.json
+%
+% Key message:
+% The bottleneck is not all-day capacity shortage, but a sharply localized morning picking wave.
+
+\section{Bottleneck migration: from admission pressure to depot-wave pressure}
+% Write here:
+% - State the key scientific finding cleanly:
+%   the dominant overload in West is concentrated around 05:30--06:15,
+%   and almost all overload is before noon.
+% - Explain why this changes the problem interpretation.
+%
+% Good source material:
+% - 22.04fresh_solver/results/diagnostics/west_or_v7_picking_summary.json
+% - 22.04fresh_solver/docs/OR支线_V8动态shadow_price阶段总结_v1.md
+% - Desktop summary markdown on the Desktop
+
+\section{Why controller-only smoothing and generic backends are insufficient}
+% Write here:
+% - Explain why high-level admission control alone cannot fully smooth a localized bucket peak.
+% - Explain why generic routing backends do not naturally internalize bucket-level warehouse pressure.
+% - This is the motivation section for the integrated architecture.
+%
+% Good source material:
+% - 22.04fresh_solver/docs/最优算法架构.md
+% - 22.04fresh_solver/docs/22.03controller_line_vs_22.04fresh_solver_关系与口径说明.md
+%
+% Important:
+% Keep the tone analytical, not dismissive of 22.03.
+
+\section{Integrated controller-routing-repair architecture}
+% Write here:
+% - Present the three-layer architecture explicitly:
+%   controller + routing + depot-repair.
+% - Explain the role of each layer and how information flows between them.
+%
+% Good source material:
+% - 22.04fresh_solver/docs/最优算法架构.md
+% - 22.04fresh_solver/README.md
+% - 22.04fresh_solver/src/algorithms/fresh_solver/julia/README.md
+%
+% Suggested subpoints to describe:
+% - controller: admission / protection / clipping
+% - routing: route construction under dynamic costs
+% - repair: bucket/depot pressure mitigation
+
+\section{Implementation shift: from Python-centered backend to Julia-first solver}
+% Write here:
+% - Explain why a Julia-first implementation became useful for the integrated line.
+% - Focus on computational and architectural reasons.
+% - Do not oversell this as a language war.
+%
+% Good source material:
+% - 22.04fresh_solver/src/algorithms/fresh_solver/julia/README.md
+% - 22.04fresh_solver/src/algorithms/fresh_solver/julia/src/FreshSolver.jl
+% - 22.04fresh_solver/src/algorithms/fresh_solver/julia/src/io.jl

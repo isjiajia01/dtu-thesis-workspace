@@ -1,0 +1,365 @@
+\chapter{Architecture and Retained Method}
+\label{chap:architecture_retained_method}
+
+This chapter explains how the thesis system is organized and which method line is ultimately retained as the main contribution of the dissertation. The chapter should serve two purposes. First, it should make the implementation pipeline understandable from raw data to daily rolling decisions, routing execution, and experiment outputs. Second, it should explain why the final thesis does not present all historical method branches with equal weight, but instead narrows the story to a retained controller line built on top of the rolling-horizon architecture.
+
+The writing principle for this chapter is to present the work as one coherent research program. The broader formulation and optimization exploration provide the background, but the retained thesis method must be stated clearly and unambiguously. In particular, this chapter should bridge the rich problem framing from the earlier research phase and the final paper-facing method line from the narrowed experiment phase.
+
+\section{Chapter purpose and scope}
+\label{sec:arch_scope}
+
+\paragraph{Writing goal.}
+This section should briefly explain what the chapter does and does not attempt to cover. It should state that:
+\begin{itemize}
+    \item the thesis studies a rolling-horizon multi-day delivery problem with repeated replanning;
+    \item the full research program considered a broader method space than the final thesis line;
+    \item the present chapter focuses on the retained architecture and the retained method progression that support the final claims of the dissertation;
+    \item exact-track and broader matheuristic extensions are acknowledged, but they are not the main paper-facing method in the final thesis narrative.
+\end{itemize}
+
+\paragraph{Primary source material.}
+The final draft of this chapter should be synthesized mainly from:
+\begin{itemize}
+    \item \texttt{22.02thesis/model/solver.md},
+    \item \texttt{22.02thesis/model/formulation.md},
+    \item \texttt{22.02thesis/docs/architecture.md},
+    \item \texttt{22.03controller_line/docs/architecture.md},
+    \item \texttt{22.03controller_line/docs/decisions.md},
+    \item \texttt{22.03controller_line/experiments.md},
+    \item \texttt{22.03controller_line/paper/THESIS\_EXPERIMENT\_WRITING\_MAP.md},
+    \item \texttt{22.03controller_line/paper/CLAIM\_GUARDRAILS.md}.
+\end{itemize}
+
+\section{System architecture overview}
+\label{sec:arch_overview}
+
+This section should give the reader a compact view of the end-to-end system. The prose should make clear that the thesis is not only a routing solver, but a structured decision system with multiple layers.
+
+\subsection{High-level layers}
+\label{subsec:arch_layers}
+
+Describe the architecture as a layered pipeline:
+\begin{enumerate}
+    \item \textbf{Data layer:} raw operational inputs, processed benchmark instances, and travel-time or distance matrices.
+    \item \textbf{State construction layer:} transformation from released and carryover orders into the current decision state.
+    \item \textbf{Policy or controller layer:} daily decision logic that determines which orders should be attempted under the current operational conditions.
+    \item \textbf{Routing and execution layer:} intra-day vehicle routing under capacities, durations, and other operational constraints.
+    \item \textbf{Evaluation layer:} computation of service, failure, carryover, churn, and cost metrics.
+    \item \textbf{Experiment orchestration layer:} scripts, configuration, and HPC execution that make the evaluation reproducible.
+\end{enumerate}
+
+\paragraph{Writing note.}
+The emphasis should be that the architecture is hierarchical. The thesis contribution is not merely a better static solver, but a better way to connect rolling-horizon decision-making and daily execution under operational pressure.
+
+\subsection{Repository-level mapping}
+\label{subsec:arch_repo_mapping}
+
+This subsection should explain the relationship between the major directories without turning the chapter into a repository tour. A concise explanation is enough:
+\begin{itemize}
+    \item \texttt{22.02thesis} preserves the broad problem formulation, solver design space, and richer optimization background.
+    \item \texttt{22.03controller_line} preserves the retained experiment scope, controller line, and paper-facing claim discipline.
+    \item \texttt{paper} is the final manuscript and should integrate those materials into one coherent thesis.
+\end{itemize}
+
+The chapter should explicitly state that this division reflects the evolution of one thesis, not two unrelated projects.
+
+\section{Data and execution pipeline}
+\label{sec:arch_data_pipeline}
+
+This section should explain how the system moves from raw business data to decision-time routing outcomes.
+
+\subsection{Raw data, processed instances, and matrices}
+\label{subsec:arch_data_sources}
+
+Summarize the operational data flow:
+\begin{itemize}
+    \item raw workbook files encode orders, warehouse information, and vehicle settings;
+    \item processed benchmark instances translate those business fields into experiment-ready structures;
+    \item road-network matrices provide travel times and distances used by the retained experiments.
+\end{itemize}
+
+\paragraph{Key message.}
+The thesis should stress that the operational setting is grounded in real business semantics, not only an abstract benchmark. In particular, this subsection should mention:
+\begin{itemize}
+    \item release dates and due dates,
+    \item feasible service windows,
+    \item depot timing and gate semantics,
+    \item fleet and route-duration limits,
+    \item the role of road-network matrices in realistic routing evaluation.
+\end{itemize}
+
+\subsection{Rolling-horizon state update}
+\label{subsec:arch_state_update}
+
+Explain how the system constructs the visible state on each day:
+\begin{itemize}
+    \item newly visible orders are released into the decision state;
+    \item unserved or partially handled orders become carryover;
+    \item current-day pressure is summarized through workload, backlog, deadlines, and execution feasibility indicators;
+    \item the policy layer uses this compressed state to choose an action for the day.
+\end{itemize}
+
+\paragraph{Writing note.}
+This subsection should connect naturally to the retained method later in the chapter. It should introduce the idea that controller quality depends on how well the state captures not only nominal demand, but also execution difficulty.
+
+\section{Rolling-horizon control and routing interaction}
+\label{sec:arch_control_routing_interaction}
+
+This section should explain the operational loop that repeats across the planning horizon.
+
+\subsection{Decision sequence within one day}
+\label{subsec:arch_daily_loop}
+
+A clear narrative should be given in four steps:
+\begin{enumerate}
+    \item observe released and carryover orders;
+    \item evaluate the current operational state;
+    \item choose a policy action that controls how aggressively the system commits today's capacity;
+    \item run the routing layer to obtain executable deliveries and update next-day carryover.
+\end{enumerate}
+
+\paragraph{Key message.}
+This subsection should make explicit that the thesis problem is not solved by routing alone. The central difficulty is deciding \emph{what to attempt today} under uncertainty and limited execution capacity.
+
+\subsection{Routing layer as execution engine}
+\label{subsec:arch_routing_layer}
+
+Describe the routing layer as the execution engine of the system:
+\begin{itemize}
+    \item it respects capacities, time or duration limits, and other operational constraints;
+    \item it converts controller choices into actual delivered orders;
+    \item it is the mechanism through which poor selection decisions become drops, failures, or carryover.
+\end{itemize}
+
+\paragraph{Writing note.}
+The chapter should avoid overselling the routing layer as the sole contribution. Instead, it should frame routing as essential but subordinate to the rolling decision problem addressed by the retained controller line.
+
+\section{From broad method space to retained thesis method}
+\label{sec:arch_broad_to_retained}
+
+This section is the conceptual bridge between the broader research program and the final thesis line.
+
+\subsection{Broader method space considered in the research program}
+\label{subsec:arch_broad_method_space}
+
+This subsection should briefly acknowledge the wider family of methods considered during the research process:
+\begin{itemize}
+    \item baseline daily solver-centric pipelines,
+    \item richer multi-day heuristic or ALNS-style exploration,
+    \item route-pool restricted-master or matheuristic intensification,
+    \item exact-track or bound-oriented extensions on reduced instances.
+\end{itemize}
+
+\paragraph{Purpose.}
+The goal here is not to expand the thesis again, but to show that the final retained line is a deliberate narrowing rather than an arbitrary omission.
+
+\subsection{Why the thesis line was narrowed}
+\label{subsec:arch_narrowing_rationale}
+
+This subsection should explain why the final dissertation adopts a narrower method story:
+\begin{itemize}
+    \item the final thesis needs a coherent experimental backbone;
+    \item the retained scope must be reproducible and defensible;
+    \item historical branches should not dilute the main narrative;
+    \item final paper-facing claims must align with the strongest and cleanest evidence path.
+\end{itemize}
+
+The text should state explicitly that the retained thesis scope is organized around:
+\begin{itemize}
+    \item \texttt{EXP00} as the normal-operation reference,
+    \item \texttt{EXP01} as the crunch baseline,
+    \item the \texttt{Scenario1} controller progression as the main method line.
+\end{itemize}
+
+\section{Retained thesis method line}
+\label{sec:arch_retained_method_line}
+
+This is the core section of the chapter. It should define what the thesis ultimately claims as its retained method.
+
+\subsection{Retained controller progression}
+\label{subsec:arch_controller_progression}
+
+State clearly that the final paper-facing controller line is:
+\begin{equation}
+    v2 \rightarrow v4 \rightarrow v5 \rightarrow v6f \rightarrow v6g.
+\end{equation}
+
+Then explain the role of each stage at a high level:
+\begin{itemize}
+    \item \textbf{$v2$:} early robust baseline for pressure-aware selection under rolling uncertainty.
+    \item \textbf{$v4$:} event-driven commitment logic that improves how the system allocates day-level effort.
+    \item \textbf{$v5$:} risk-budgeted refinement that improves the main line by balancing service ambition against future pressure.
+    \item \textbf{$v6f$:} execution-aware guard, which makes explicit that nominal capacity differs from executable capacity.
+    \item \textbf{$v6g$:} deadline reservation, which becomes the final retained thesis candidate by preserving near-deadline service more effectively.
+\end{itemize}
+
+\paragraph{Writing note.}
+This subsection should be concise and disciplined. It should not revive abandoned branches as equal alternatives. If counterexamples are mentioned later, they should be framed as supporting interpretation, not as competing mainline methods.
+
+\subsection{Retained operating principle}
+\label{subsec:arch_retained_operating_principle}
+
+Describe the retained method as a policy layer that sits above routing:
+\begin{enumerate}
+    \item build a summary of current operational pressure,
+    \item generate a set of candidate actions,
+    \item evaluate those actions under short-horizon uncertainty,
+    \item incorporate execution-awareness and deadline protection,
+    \item choose the action that best balances current service and future feasibility,
+    \item pass the chosen order set to the routing layer.
+\end{enumerate}
+
+\paragraph{Key message.}
+The retained method should be described as \emph{execution-aware rolling control}, not as a standalone static optimizer.
+
+\section{Internal structure of the retained method}
+\label{sec:arch_retained_internal_structure}
+
+This section should provide a more technical but still thesis-readable decomposition of the retained controller.
+
+\subsection{State representation}
+\label{subsec:arch_state_representation}
+
+This subsection should explain what information the controller needs. The final prose can describe a compact state representation including:
+\begin{itemize}
+    \item backlog pressure,
+    \item due-soon or deadline pressure,
+    \item current-day capacity stress,
+    \item recent execution degradation,
+    \item carryover structure,
+    \item route-difficulty or dispersion indicators where relevant.
+\end{itemize}
+
+\paragraph{Writing note.}
+The main point is not to enumerate every variable, but to explain why controller quality depends on a state that reflects \emph{execution risk}, not only nominal demand.
+
+\subsection{Candidate action generation}
+\label{subsec:arch_candidate_actions}
+
+Explain that the controller does not make a single continuous optimization decision directly. Instead, it evaluates a structured family of policy actions, such as:
+\begin{itemize}
+    \item more conservative reservation-oriented actions,
+    \item balanced actions,
+    \item more release-oriented actions under recovery conditions,
+    \item deadline-protective actions in high-pressure states.
+\end{itemize}
+
+\paragraph{Purpose.}
+This subsection should show that the controller is interpretable: it compares meaningful operational modes rather than producing opaque decisions without structure.
+
+\subsection{Scenario evaluation and risk-sensitive ranking}
+\label{subsec:arch_scenario_evaluation}
+
+This subsection should explain how candidate actions are evaluated:
+\begin{itemize}
+    \item future conditions are approximated through short-horizon scenario sampling or belief-based evaluation;
+    \item the controller compares actions using losses tied to failures, service degradation, and future risk;
+    \item the selected action therefore reflects not only today's routing possibility, but also the near-future consequences of committing too much or too little.
+\end{itemize}
+
+\paragraph{Writing note.}
+This is the right place to explain why the method is more than a greedy dispatch rule. It is a structured rolling policy that anticipates near-future pressure.
+
+\subsection{Execution-aware guard as the transition point}
+\label{subsec:arch_execution_guard}
+
+This subsection should present \texttt{v6f} as the key methodological transition:
+\begin{itemize}
+    \item earlier versions improve selection logic, but still rely too heavily on nominal capacity assumptions;
+    \item \texttt{v6f} recognizes that practical deliverability depends on execution feasibility;
+    \item the controller therefore uses an execution-aware estimate of effective capacity when ranking actions.
+\end{itemize}
+
+\paragraph{Key message.}
+The thesis should argue that \texttt{v6f} is important because it changes the mechanism being modeled. It is the point where the method shifts from merely choosing aggressively or conservatively to reasoning about what can actually be executed.
+
+\subsection{Deadline reservation as the retained final method}
+\label{subsec:arch_deadline_reservation}
+
+This subsection should present \texttt{v6g} as the final retained thesis candidate:
+\begin{itemize}
+    \item it inherits the execution-aware view of \texttt{v6f};
+    \item it adds stronger protection for imminent deadlines;
+    \item it provides the final closure of the retained controller line in the thesis narrative.
+\end{itemize}
+
+\paragraph{Writing note.}
+The text should state that \texttt{v6g} is the final retained paper-facing endpoint, while avoiding premature overclaiming. Detailed performance claims belong in the results chapter, not here.
+
+\section{Implementation boundary of the retained chapter narrative}
+\label{sec:arch_implementation_boundary}
+
+This section should explain what is intentionally left outside the main method narrative.
+
+\subsection{What remains outside the retained mainline}
+\label{subsec:arch_excluded_branches}
+
+This subsection should clarify that:
+\begin{itemize}
+    \item broader exact-track work remains valuable but secondary;
+    \item exploratory or superseded controller variants are not part of the final mainline;
+    \item stress-side counterexamples may still be discussed where they improve interpretation;
+    \item solver-side exploratory follow-ups should not replace the retained thesis line unless they are explicitly promoted with matching evidence and documentation.
+\end{itemize}
+
+\paragraph{Purpose.}
+This subsection protects the coherence of the chapter and the thesis as a whole.
+
+\subsection{Reproducibility boundary}
+\label{subsec:arch_reproducibility_boundary}
+
+The chapter should also state that the retained thesis line is the one connected most directly to:
+\begin{itemize}
+    \item official experiment definitions,
+    \item HPC execution scripts,
+    \item paper-facing writing maps,
+    \item claim guardrails and final result interpretation.
+\end{itemize}
+
+This reinforces why the chapter focuses on the retained line instead of reopening every historical branch.
+
+\section{Planned figure and table support}
+\label{sec:arch_planned_figures}
+
+This section can remain brief in the draft, but it should specify what visual aids belong here.
+
+\subsection{Recommended figure candidates}
+\label{subsec:arch_figure_candidates}
+
+The final version of this chapter should ideally include:
+\begin{itemize}
+    \item a high-level architecture diagram showing data, controller, routing, and evaluation layers;
+    \item a rolling-horizon daily loop diagram;
+    \item a small progression figure or table summarizing the retained controller line from \texttt{v2} to \texttt{v6g}.
+\end{itemize}
+
+\subsection{Recommended table candidate}
+\label{subsec:arch_table_candidate}
+
+A compact table may summarize:
+\begin{itemize}
+    \item controller version,
+    \item main mechanism,
+    \item reason for retention or exclusion,
+    \item role in the thesis narrative.
+\end{itemize}
+
+\section{Chapter takeaway}
+\label{sec:arch_takeaway}
+
+The chapter should end with a short synthesis paragraph making four points clear:
+\begin{enumerate}
+    \item the thesis system is a layered rolling-horizon decision architecture rather than a standalone static routing solver;
+    \item the broader research process explored a richer method space than the final dissertation ultimately retains;
+    \item the retained paper-facing method line is the controller progression
+    \[
+        v2 \rightarrow v4 \rightarrow v5 \rightarrow v6f \rightarrow v6g;
+    \]
+    \item \texttt{v6g} is the final retained thesis candidate, and the following chapters will evaluate it within the retained experimental scope.
+\end{enumerate}
+
+% Drafting checklist:
+% 1. Replace planning prose with polished thesis prose once Chapter 3 is stable.
+% 2. Keep the chapter consistent with 22.03 claim guardrails.
+% 3. Avoid reviving abandoned branches as co-equal methods.
+% 4. Move exact-track detail to discussion or appendix where appropriate.

@@ -1,0 +1,170 @@
+\chapter{Introduction}
+\label{ch:introduction}
+
+This chapter is currently written as a \textbf{structured drafting plan} for the final thesis introduction.
+Its purpose is to establish the practical motivation, the research gap, the thesis scope, the main contributions, and the document roadmap.
+When later rewritten into full prose, the final text should preserve the same logical flow while removing planning notes and placeholder cues.
+
+\section{Operational Motivation}
+\label{sec:intro:motivation}
+
+\textbf{Purpose of this section.}
+Introduce the real-world delivery planning setting and explain why the problem is more difficult than a standard static vehicle routing problem.
+
+\textbf{Points to cover in the final version.}
+\begin{itemize}
+    \item Last-mile delivery is planned repeatedly over multiple days rather than solved once for a fixed static instance.
+    \item Orders are released over time and may have flexible service windows rather than a single mandatory service day.
+    \item Daily planning must coordinate order selection, route construction, and operational feasibility under limited computation time.
+    \item Depot-side constraints such as departure windows, gates, staging, and throughput make the problem more realistic and more coupled than a classical VRP.
+    \item Replanning quality is not only about cost or service rate; operational stability also matters because frequent plan changes create friction in practice.
+\end{itemize}
+
+\textbf{Drafting note.}
+This section should be grounded in the business semantics preserved in the broader thesis material, especially the raw workbook interpretation and the distinction between dispatch constraints and picking constraints.
+
+\section{Problem Context}
+\label{sec:intro:context}
+
+\textbf{Purpose of this section.}
+Give the reader a concise preview of the decision setting without yet introducing full mathematical notation.
+
+\textbf{Points to cover in the final version.}
+\begin{itemize}
+    \item The system operates on a rolling horizon over days \(t = 1, \dots, T\).
+    \item Each day only the currently visible orders are available to the planner.
+    \item Orders may be fixed-day or flexible-day, which creates an inter-day assignment decision.
+    \item After selecting which orders to attempt on the current day, the system must still solve an intra-day routing problem under time, capacity, and execution limits.
+    \item Unserved orders may carry over and create future pressure, so current decisions affect later feasibility.
+\end{itemize}
+
+\textbf{Drafting note.}
+This section should be concise and intuitive.
+The full formalization belongs in Chapter~\ref{ch:operational_context_problem_setting}.
+
+\section{Research Gap}
+\label{sec:intro:gap}
+
+\textbf{Purpose of this section.}
+Explain why the thesis is needed and what existing approaches fail to capture sufficiently.
+
+\textbf{Points to cover in the final version.}
+\begin{itemize}
+    \item A static single-day routing formulation is too narrow for a setting with rolling visibility and flexible delivery windows.
+    \item A purely solver-centric daily baseline can miss the cross-day consequences of admission and commitment decisions.
+    \item Rich real-world constraints increase realism but also make exact global optimization difficult under realistic runtime budgets.
+    \item Existing practical decision pipelines often under-model either execution feasibility or plan stability.
+    \item There is therefore a need for a thesis framework that connects broad rich formulation with a narrower, reproducible, paper-ready experimental line.
+\end{itemize}
+
+\textbf{Drafting note.}
+This section is the bridge between the broader methodological foundation and the final retained thesis line.
+It should help the reader understand why the thesis first formulates a rich problem and then narrows to a cleaner experimental storyline.
+
+\section{Thesis Objective and Scope}
+\label{sec:intro:objective}
+
+\textbf{Purpose of this section.}
+State clearly what the thesis aims to do and what scope it intentionally excludes.
+
+\textbf{Draft objective statement to refine later.}
+The objective of this thesis is to study rolling-horizon multi-day last-mile delivery planning with flexible service windows, heterogeneous fleet resources, and operational depot constraints, and to develop a practically meaningful planning framework that combines realistic problem structure with a reproducible final experimental methodology.
+
+\textbf{Scope points to retain.}
+\begin{itemize}
+    \item The broader problem formulation includes cross-day assignment, routing feasibility, depot-side operational limits, and stability concerns.
+    \item The final paper-facing experiment line is intentionally narrower than the full formulation.
+    \item The retained experimental backbone is based on the normal-operation and pressure baselines together with the final controller progression under the chosen scenario line.
+    \item Some broader exact or matheuristic directions are retained mainly for methodological depth and appendix-level discussion rather than as the central empirical thesis claim.
+\end{itemize}
+
+\textbf{Drafting note.}
+This section should make the broad-to-narrow thesis design feel intentional rather than inconsistent.
+
+\section{Research Questions}
+\label{sec:intro:questions}
+
+\textbf{Purpose of this section.}
+Present a small number of focused research questions that align with the final chapter structure.
+
+\textbf{Candidate research questions.}
+\begin{enumerate}
+    \item How should a rolling-horizon multi-day last-mile delivery problem be formulated when orders have flexible service windows and depot-side operational constraints are explicitly considered?
+    \item How can the planning process be structured so that cross-day decision quality is improved beyond a purely daily solver-centric baseline?
+    \item How should the thesis balance broad methodological richness with a narrower and reproducible final experiment line?
+    \item To what extent can the retained controller progression improve performance under pressure while remaining consistent with operational execution limits?
+\end{enumerate}
+
+\textbf{Drafting note.}
+These questions can later be sharpened once the final results chapter is stabilized.
+
+\section{Main Contributions}
+\label{sec:intro:contributions}
+
+\textbf{Purpose of this section.}
+Summarize what the thesis contributes without overselling claims.
+
+\textbf{Candidate contribution list.}
+\begin{itemize}
+    \item A realistic rolling-horizon problem framing for multi-day last-mile delivery with flexible service windows, heterogeneous fleet constraints, and depot-side operational coupling.
+    \item A structured bridge from raw business-oriented data semantics to optimization-oriented model components.
+    \item A methodological narrative that connects broad formulation and solver exploration with a narrowed final experimental line suitable for thesis-quality reporting.
+    \item A retained experimental comparison line that evaluates progressively improved control logic under a pressure scenario while keeping result interpretation disciplined.
+    \item A discussion of limitations that distinguishes modeled execution limits from stronger real-world causal claims.
+\end{itemize}
+
+\textbf{Drafting note.}
+The wording in this section must stay aligned with the final result-writing guardrails.
+Avoid claiming more than the available evidence supports.
+
+\section{Methodological Overview}
+\label{sec:intro:method-overview}
+
+\textbf{Purpose of this section.}
+Give a short preview of how the thesis proceeds methodologically.
+
+\textbf{Points to cover in the final version.}
+\begin{itemize}
+    \item Start from a rich rolling-horizon delivery formulation and its operational semantics.
+    \item Describe the broader method space, including heuristic, matheuristic, and exact-support directions where relevant.
+    \item Narrow the final thesis line to a retained experimental scope with clearly defined baselines and a controller progression.
+    \item Evaluate the retained line under the selected experimental protocol and discuss what the evidence supports and what remains open.
+\end{itemize}
+
+\textbf{Drafting note.}
+This section should preview the thesis logic, not repeat the full methodology chapter.
+
+\section{Thesis Structure}
+\label{sec:intro:structure}
+
+\textbf{Purpose of this section.}
+Guide the reader through the rest of the document.
+
+\textbf{Planned chapter summary.}
+\begin{itemize}
+    \item Chapter 2 reviews related literature and positions the thesis relative to rolling-horizon planning, dynamic vehicle routing, and robust or execution-aware decision making.
+    \item Chapter 3 introduces the operational setting, data semantics, and formal problem formulation.
+    \item Chapter 4 explains the broader methodological and architectural design of the thesis framework.
+    \item Chapter 5 presents the retained thesis method line and the controller evolution that leads to the final paper-facing approach.
+    \item Chapter 6 defines the experimental design, reproducibility choices, and evaluation logic.
+    \item Chapter 7 presents the empirical results in the retained writing order.
+    \item Chapter 8 discusses the implications, limitations, and interpretation boundaries of the findings.
+    \item The concluding chapter summarizes the thesis and outlines directions for future work.
+\end{itemize}
+
+\section{Writing Checklist for Revision}
+\label{sec:intro:checklist}
+
+Before this chapter is considered final, verify that the rewritten version does all of the following:
+\begin{itemize}
+    \item motivates the real operational problem clearly,
+    \item distinguishes the broad thesis foundation from the retained final experimental line,
+    \item states the scope without sounding fragmented,
+    \item presents contributions conservatively and precisely,
+    \item aligns terminology with later chapters,
+    \item remains consistent with the final result-writing guardrails.
+\end{itemize}
+
+% Placeholder label reminder:
+% Replace any placeholder chapter references once the final chapter files and labels are stabilized.
+% In particular, update the reference in Section~\ref{sec:intro:context} to the actual problem-setting chapter label.

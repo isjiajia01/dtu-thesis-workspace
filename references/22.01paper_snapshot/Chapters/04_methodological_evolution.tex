@@ -1,0 +1,212 @@
+\chapter{Methodological Evolution}
+\label{chap:methodological_evolution}
+
+This chapter explains how the thesis methodology evolved from a broad rich-optimization research program into a narrower retained thesis line. The chapter should make the transition from \texttt{22.02thesis} to \texttt{22.03controller_line} feel natural and intentional rather than accidental. The main narrative goal is to show that the final thesis method was not chosen in isolation; it emerged from a broader exploration of formulation, algorithm design, experiment protocol, and execution constraints.
+
+\section{Chapter Purpose}
+This chapter should answer four questions:
+
+\begin{enumerate}
+    \item What was the original methodological design space?
+    \item Why was the thesis line later narrowed?
+    \item Which parts of the broader methodology remain important in the final thesis?
+    \item How did the final retained controller line emerge as the main paper-facing method?
+\end{enumerate}
+
+The tone should be interpretive and explanatory, not chronological diary-writing. Avoid presenting this chapter as ``old project versus new project''. Instead, frame it as a single research effort that progressively converged toward a more focused and reproducible thesis line.
+
+\section{Recommended Chapter Logic}
+The most natural structure for this chapter is:
+
+\begin{enumerate}
+    \item Broad problem-driven method design in the early phase
+    \item Key methodological branches explored in the broader repository
+    \item Limitations of keeping the full broad line as the main thesis spine
+    \item Narrowing rationale toward a retained experiment line
+    \item Final method progression used in the thesis
+\end{enumerate}
+
+\section{Section Plan}
+
+\subsection*{4.1 From Rich Operational Problem to Broad Method Space}
+\textbf{Purpose:} Explain that the methodology began from the complexity of the operational problem itself.
+
+\textbf{Key points to write:}
+\begin{itemize}
+    \item The thesis problem is not a static single-day VRP.
+    \item Orders have release dates, due boundaries, and multi-day feasible service windows.
+    \item Daily routing is only one part of the decision process; cross-day assignment and rolling replanning are also central.
+    \item Depot operations, gate limits, staging, and throughput constraints create additional coupling across decisions.
+    \item Repeated replanning introduces a second research goal beyond cost minimization: plan stability.
+\end{itemize}
+
+\textbf{Main source material:}
+\begin{itemize}
+    \item \texttt{22.02thesis/problem.md}
+    \item \texttt{22.02thesis/model/formulation.md}
+    \item \texttt{22.02thesis/docs/raw\_data\_intake\_20260305.md}
+\end{itemize}
+
+\textbf{Writing note:} This section should make clear that the broader method space was a consequence of the real problem structure, not unnecessary complexity.
+
+\subsection*{4.2 Early Methodological Directions in the Broad Research Line}
+\textbf{Purpose:} Summarize the major method families explored in the broader research phase.
+
+\textbf{Key points to write:}
+\begin{itemize}
+    \item A baseline daily solver-centric line was needed for comparison.
+    \item A richer multi-day heuristic line was explored to integrate assignment and routing decisions.
+    \item ALNS and related destroy/repair search logic were introduced as the main heuristic search framework.
+    \item Route-pool restricted set-partitioning recombination was explored as a matheuristic intensification layer.
+    \item Exact and column-generation ideas were studied as supporting lower-bound and certification tools on reduced instances.
+    \item Stability-aware replanning and PlanChurn were introduced as explicit methodological concerns rather than afterthought metrics.
+\end{itemize}
+
+\textbf{Main source material:}
+\begin{itemize}
+    \item \texttt{22.02thesis/model/solver.md}
+    \item \texttt{22.02thesis/model/exact\_track.md}
+    \item \texttt{22.02thesis/model/branch\_price\_design.md}
+    \item \texttt{22.02thesis/docs/experiments/plan\_churn\_protocol\_week6.md}
+    \item \texttt{22.02thesis/docs/experiments/resistance\_suite.md}
+\end{itemize}
+
+\textbf{Writing note:} Keep this section selective. The goal is to show methodological breadth, not to turn the chapter into a catalogue of every historical attempt.
+
+\subsection*{4.3 Why the Full Broad Method Space Was Not Used as the Final Thesis Spine}
+\textbf{Purpose:} Explain why the broader methodology was valuable but not ideal as the final dissertation backbone.
+
+\textbf{Key points to write:}
+\begin{itemize}
+    \item The broad line captured the true richness of the operational problem.
+    \item However, a graduation thesis also needs a clear experimental backbone, stable scope, and reproducible evidence path.
+    \item Some broader directions were more suitable as supporting theory, appendix material, or future work than as the main final method line.
+    \item Exact and hybrid backend directions remained valuable for depth, but they were not the cleanest final story for the retained thesis results.
+    \item The thesis therefore needed a deliberate narrowing from a broad research program to a focused retained experiment line.
+\end{itemize}
+
+\textbf{Main source material:}
+\begin{itemize}
+    \item \texttt{22.02thesis/THESIS\_FOLDER\_MAP.md}
+    \item \texttt{22.03controller_line/docs/decisions.md}
+    \item \texttt{22.03controller_line/paper/CHAPTER\_REWRITE\_PLAN.md}
+\end{itemize}
+
+\textbf{Writing note:} This is the bridge section that prevents the thesis from feeling like two stitched-together projects.
+
+\subsection*{4.4 Narrowing Toward the Retained Thesis Line}
+\textbf{Purpose:} Introduce the narrower experimental scope that became the final thesis backbone.
+
+\textbf{Key points to write:}
+\begin{itemize}
+    \item The final thesis line was intentionally reduced to a small retained experiment family.
+    \item The retained backbone consists of \texttt{EXP00}, \texttt{EXP-BASELINE}, and \texttt{EXP01}.
+    \item Within \texttt{EXP01}, the main method story is carried by the \texttt{Scenario1} controller progression.
+    \item This narrowing made the thesis more coherent, more auditable, and easier to write without losing the broader conceptual foundation.
+\end{itemize}
+
+\textbf{Main source material:}
+\begin{itemize}
+    \item \texttt{22.03controller_line/experiments.md}
+    \item \texttt{22.03controller_line/docs/decisions.md}
+    \item \texttt{22.03controller_line/paper/THESIS\_EXPERIMENT\_WRITING\_MAP.md}
+    \item \texttt{22.03controller_line/paper/CLAIM\_GUARDRAILS.md}
+\end{itemize}
+
+\textbf{Writing note:} This section should explicitly state that narrowing the scope was a research decision, not a loss of ambition.
+
+\subsection*{4.5 Emergence of the Final Controller Progression}
+\textbf{Purpose:} Present the final method line that the thesis will actually evaluate and discuss.
+
+\textbf{Key points to write:}
+\begin{itemize}
+    \item The final paper-facing method progression is:
+    \begin{itemize}
+        \item \texttt{v2}
+        \item \texttt{v4}
+        \item \texttt{v5}
+        \item \texttt{v6f}
+        \item \texttt{v6g}
+    \end{itemize}
+    \item Each version should be presented as a methodological refinement rather than as an unrelated experiment.
+    \item \texttt{v4} should be framed as the event-commitment improvement over the earlier robust baseline.
+    \item \texttt{v5} should be framed as the risk-budget refinement.
+    \item \texttt{v6f} should be framed as the execution-aware transition point.
+    \item \texttt{v6g} should be framed as the final deadline-reservation closure of the main line.
+\end{itemize}
+
+\textbf{Main source material:}
+\begin{itemize}
+    \item \texttt{22.03controller_line/experiments.md}
+    \item \texttt{22.03controller_line/docs/decisions.md}
+    \item \texttt{22.03controller_line/paper/THESIS\_EXPERIMENT\_WRITING\_MAP.md}
+    \item \texttt{22.03controller_line/paper/CLAIM\_GUARDRAILS.md}
+\end{itemize}
+
+\textbf{Writing note:} This section should end with a clear statement that \texttt{v6g} is the current retained main candidate for the final thesis.
+
+\subsection*{4.6 What Was Retained, What Was Repositioned}
+\textbf{Purpose:} Clarify the final role of the two repositories inside the thesis.
+
+\textbf{Key points to write:}
+\begin{itemize}
+    \item From the broader line, the thesis retains:
+    \begin{itemize}
+        \item the rich problem formulation,
+        \item the data semantics,
+        \item the broader solver design rationale,
+        \item stability and robustness motivations.
+    \end{itemize}
+    \item From the narrower line, the thesis retains:
+    \begin{itemize}
+        \item the final experiment scope,
+        \item the final controller progression,
+        \item the final result-writing order,
+        \item the final claim guardrails.
+    \end{itemize}
+    \item Exact-track and backend notes are repositioned as discussion or appendix support rather than the main result spine.
+\end{itemize}
+
+\textbf{Main source material:}
+\begin{itemize}
+    \item \texttt{22.02thesis/THESIS\_FOLDER\_MAP.md}
+    \item \texttt{22.03controller_line/THESIS\_FOLDER\_MAP.md}
+    \item \texttt{thesis/AGENTS.md}
+\end{itemize}
+
+\textbf{Writing note:} This section should prepare the reader for the next chapters, where the thesis stops speaking about broad methodological possibilities and starts speaking about the retained architecture and experiment pipeline.
+
+\section{Recommended Closing Paragraph}
+The chapter should close with a short synthesis paragraph along the following lines:
+
+\begin{quote}
+The methodological evolution of the thesis was therefore not a discontinuous shift from one project to another, but a structured narrowing process. The broader research phase established the rich operational formulation, the candidate optimization methods, and the evaluation philosophy. The final thesis phase then retained the subset of this program that could support a coherent, reproducible, and well-evidenced dissertation. The remainder of the thesis therefore focuses on the retained architecture, controller progression, and experimental evidence built around that narrowed line.
+\end{quote}
+
+\section{What This Chapter Should Avoid}
+\begin{itemize}
+    \item Do not write this chapter as a week-by-week lab notebook.
+    \item Do not list every abandoned branch or minor variant.
+    \item Do not oversell exact-track material as if it were the final main solver.
+    \item Do not let repository names dominate the prose.
+    \item Do not frame the story as two unrelated theses.
+\end{itemize}
+
+\section{Downstream Dependencies}
+This chapter should provide a clean handoff to:
+\begin{itemize}
+    \item Chapter 5 on the retained architecture and implementation
+    \item Chapter 6 on the retained experiment design
+    \item Chapter 7 on the final results narrative
+\end{itemize}
+
+\section{Drafting Checklist}
+Before considering this chapter complete, check that the draft:
+\begin{itemize}
+    \item explains the broad-to-narrow methodological transition clearly,
+    \item makes the role of \texttt{22.02thesis} and \texttt{22.03controller_line} conceptually distinct but narratively unified,
+    \item identifies \texttt{v6g} as the retained main candidate,
+    \item positions \texttt{v6f} as the execution-aware transition,
+    \item keeps exact / branch-price / backend material as support rather than the main final spine,
+    \item sets up the later architecture, experiment, and results chapters naturally.
+\end{itemize}

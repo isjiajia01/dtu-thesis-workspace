@@ -1,0 +1,59 @@
+\chapter{Discussion and Limitations}
+\label{chap:discussion_limitations}
+
+% Writing objective:
+% Interpret the results, explain what has and has not been shown, and connect the findings
+% to both theory and industrial operations.
+
+% ============================================================
+\section{Service versus smoothing trade-off}
+% Write here:
+% - Discuss the central trade-off exposed by V8 -> V8.1 -> V8.2.
+% - Explain why smoothing is valuable but over-aggressive price activation can hurt service.
+% - This section should show maturity and honesty.
+%
+% Good source material:
+% - 22.04fresh_solver/docs/OR支线_V8动态shadow_price阶段总结_v1.md
+% - 22.04fresh_solver/results/diagnostics/west_or_v8_picking_summary.json
+% - 22.04fresh_solver/results/diagnostics/west_or_v8_1_picking_summary.json
+% - 22.04fresh_solver/results/diagnostics/west_or_v8_2_picking_summary.json
+
+\section{What the thesis reveals about bottleneck structure}
+% Write here:
+% - Discuss the scientific importance of identifying localized morning picking waves.
+% - Explain why this matters for planning theory and not just this dataset.
+%
+% Good source material:
+% - 22.04fresh_solver/results/diagnostics/west_or_v7_picking_summary.json
+% - 22.04fresh_solver/docs/OR支线_V8大实例与Herlev验证补充.md
+
+\section{Industrial implications for planning and staffing}
+% Write here:
+% - Translate the findings into operational guidance for Mover-like settings.
+% - Talk about staffing, wave-shaping, admission smoothing, and execution realism.
+% - Keep this concrete and practical.
+%
+% Good source material:
+% - 22.04fresh_solver/docs/问题背景.md
+% - Desktop summary markdown
+% - Your own thesis collaboration context with Mover
+
+\section{Limits of the evidence}
+% Write here:
+% - State clearly what the thesis does NOT prove.
+% - Examples:
+%   - does not prove true physical optimum,
+%   - does not prove one universal best policy across all regimes,
+%   - does not show direct deployability without further validation,
+%   - does not establish identical semantics between 22.03 and 22.04 process metrics.
+%
+% Must use:
+% - 22.01paper/CLAIM_GUARDRAILS.md
+% - 22.04fresh_solver/docs/22.03controller_line_vs_22.04fresh_solver_关系与口径说明.md
+
+\section{Future research directions}
+% Write here:
+% - Good future directions include stochastic demand, stronger robustness,
+%   more principled price activation, tighter integration of labor planning,
+%   and deeper warehouse-routing co-optimization.
+% - Keep this ambitious but grounded.

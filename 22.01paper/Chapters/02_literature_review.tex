@@ -1,0 +1,107 @@
+\chapter{Literature Review}
+\label{chap:literature_review}
+
+% Writing objective:
+% Position the thesis in the literature of vehicle routing, rolling-horizon planning,
+% integrated warehouse-routing, and large-neighborhood heuristics.
+% Keep the review tightly tied to the thesis method -- do not turn this into a generic survey.
+
+% Main bibliography source:
+% - 22.01paper/bibliography.bib
+%
+% Core papers already curated there include:
+% - solomon1987vrptw
+% - shaw1998lns
+% - ropke2006alns
+% - pisinger2010lns
+% - pillac2013dvrp
+% - archetti2011flexible
+% - francis2008pvrp
+% - kovacs2014multiperiod
+% - coelho2012consistency
+% - groer2009consistentvrp
+% - subramanian2013richvrp
+% - balster2022routepool
+% - vangils2018review
+% - vangils2021integratedpickroute
+% - wouda2024pyvrp
+
+% ============================================================
+\section{Classical vehicle routing foundations}
+% Write here:
+% - Briefly introduce classical VRP / VRPTW foundations.
+% - Use Solomon as the anchor for time-window routing.
+% - If needed, mention multi-trip behavior as a practical extension, but stay concise.
+%
+% Must cite:
+% - \cite{solomon1987vrptw}
+%
+% Goal of this section:
+% Establish the baseline routing language that later sections extend.
+
+\section{Dynamic, rolling-horizon, and multi-period routing}
+% Write here:
+% - Explain how the thesis relates to dynamic VRP and rolling planning.
+% - Explain why multi-day service flexibility and carryover naturally connect to multi-period routing.
+% - If you discuss consistency/stability, connect it to customer-service regularity and planning continuity.
+%
+% Good citations:
+% - \cite{pillac2013dvrp}
+% - \cite{francis2008pvrp}
+% - \cite{kovacs2014multiperiod}
+% - \cite{groer2009consistentvrp}
+% - \cite{coelho2012consistency}
+%
+% Key writing point:
+% Your problem is not just dynamic routing; it is rolling-horizon routing with service flexibility and execution-side coupling.
+
+\section{Integrated warehouse-routing and depot-resource coupling}
+% Write here:
+% - Review literature that combines order picking and transport planning.
+% - Explain why this matters for the thesis: picking/gate/staging loads are not external nuisances;
+%   they shape routing feasibility and service quality.
+%
+% Must cite:
+% - \cite{vangils2018review}
+% - \cite{vangils2021integratedpickroute}
+%
+% Key writing point:
+% This section justifies why the thesis moves beyond route-only optimization.
+
+\section{Heuristic and rich-VRP solution approaches}
+% Write here:
+% - Review LNS / ALNS / rich-VRP hybrid methods as the main practical solution tradition.
+% - Keep the emphasis on methods that support real constraints and scalable heuristic search.
+%
+% Good citations:
+% - \cite{shaw1998lns}
+% - \cite{ropke2006alns}
+% - \cite{pisinger2010lns}
+% - \cite{subramanian2013richvrp}
+% - \cite{balster2022routepool}
+% - \cite{vidal2013hgs}
+% - \cite{wouda2024pyvrp}
+%
+% Key writing point:
+% The thesis belongs more naturally to this heuristic/OR tradition than to black-box end-to-end learning.
+
+\section{Emerging learning-based approaches and why this thesis stays OR-centered}
+% Write here:
+% - Keep this short.
+% - Acknowledge neural combinatorial optimization as a frontier direction.
+% - Then explicitly explain why this thesis remains centered on interpretable, controllable,
+%   depot-aware heuristic optimization.
+%
+% Important note:
+% Only keep this section if you can make it serve a real methodological contrast.
+% Do not let it dominate the chapter.
+
+\section{Literature gap and thesis positioning}
+% Write here:
+% End the chapter with a clear gap statement.
+% Good final message:
+% Existing literature gives strong tools for routing, dynamic planning, and integrated picking-routing,
+% but the combination of (i) rolling-horizon order admission, (ii) depot time-bucket resource pressure,
+% and (iii) integrated cross-layer smoothing remains insufficiently addressed in a thesis-ready operational framework.
+%
+% This section should directly set up Chapter 3 and Chapter 4.

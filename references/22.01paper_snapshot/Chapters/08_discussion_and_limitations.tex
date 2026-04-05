@@ -1,0 +1,247 @@
+\chapter{Discussion and Limitations}
+\label{ch:discussion_limitations}
+
+This chapter is currently maintained as a structured writing plan for the final discussion. Its role is to interpret the retained thesis evidence without overclaiming, connect the final controller line back to the broader research program, and make the limitations of the current study explicit.
+
+The final rewrite of this chapter should remain aligned with the retained thesis scope:
+\begin{itemize}
+    \item normal-operation reference: \texttt{EXP00},
+    \item pressure baseline: \texttt{EXP01},
+    \item method progression within \texttt{EXP01 / Scenario1}: \texttt{v2 \textrightarrow v4 \textrightarrow v5 \textrightarrow v6f \textrightarrow v6g}.
+\end{itemize}
+
+\section{Purpose of the chapter}
+
+This chapter should do five things:
+\begin{enumerate}
+    \item interpret what the final retained results mean operationally,
+    \item explain why the thesis narrows from a broader rich rolling-horizon formulation to a retained controller line,
+    \item discuss what the current evidence does and does not support,
+    \item make the main modeling and evaluation limitations explicit,
+    \item identify the most credible directions for future work.
+\end{enumerate}
+
+The tone should be analytical rather than celebratory. The chapter should read as a careful synthesis of findings, not as an extension of the results section.
+
+\section{How the final thesis line should be interpreted}
+
+\subsection{From broad research program to retained thesis line}
+
+Planned discussion points:
+\begin{itemize}
+    \item The broader research program considered a richer multi-day rolling-horizon delivery problem with flexible service windows, heterogeneous fleet, depot resource constraints, and stability-aware replanning.
+    \item That broader formulation remains important because it explains why the problem is more difficult than a static daily VRP.
+    \item However, the final thesis narrows to a retained experimental line in order to keep the manuscript focused, reproducible, and evidence-driven.
+    \item The retained line should therefore be presented as a deliberate convergence of the broader research effort, not as a disconnected second project.
+\end{itemize}
+
+\subsection{Interpretation of the controller progression}
+
+Planned discussion points:
+\begin{itemize}
+    \item \texttt{v2} should be discussed as the failure-first robust starting point.
+    \item \texttt{v4} should be discussed as evidence that event-driven commitment improves over the earlier robust baseline.
+    \item \texttt{v5} should be discussed as the stage where admission, commitment, and release are handled more systematically through a risk-budgeted perspective.
+    \item \texttt{v6f} should be discussed as the key transition where the thesis line becomes explicitly execution-aware.
+    \item \texttt{v6g} should be discussed as the final retained endpoint, where deadline reservation further improves the main line and closes most of the remaining gap.
+\end{itemize}
+
+Recommended synthesis sentence for the final rewrite:
+\begin{quote}
+The main contribution of the retained method line is not a single isolated heuristic change, but a staged shift from failure-reactive control toward execution-aware and deadline-aware rolling admission decisions.
+\end{quote}
+
+\section{What the current evidence supports}
+
+\subsection{Baseline interpretation}
+
+Planned discussion points:
+\begin{itemize}
+    \item \texttt{EXP00} defines the normal operating reference.
+    \item \texttt{EXP01} defines the single-wave pressure baseline.
+    \item The contrast between these two experiments should be used to frame the effect of operational stress, not to claim causal proof of individual mechanisms.
+\end{itemize}
+
+\subsection{Main method interpretation}
+
+Planned discussion points:
+\begin{itemize}
+    \item The retained evidence supports the claim that the final controller line improves performance relative to the earlier retained baselines within the same scenario family.
+    \item The main interpretation should be that execution-aware and deadline-aware control matters under pressure when the daily routing layer is budget-limited.
+    \item The final discussion should emphasize improvement in the retained evaluation setting, rather than universal dominance.
+\end{itemize}
+
+\subsection{Interpretation of the final endpoint}
+
+Planned discussion points:
+\begin{itemize}
+    \item \texttt{v6g\_v6d\_compute300} should be described as the current thesis final controller line.
+    \item The chapter may mention \texttt{cap05} and \texttt{automode}, but only as supplementary engineering follow-ups rather than as replacements for the canonical main candidate.
+    \item The chapter should explain why \texttt{v6g\_v6d\_compute300} is preferred over nearby alternatives: it closes the remaining gap more effectively than the earlier versions while keeping the final narrative disciplined and non-tuning-driven.
+    \item If the final manuscript includes cross-depot results, they should be presented as promising out-of-distribution evidence under the retained experimental setup, not as proof of universal generalization.
+\end{itemize}
+
+\section{Operational interpretation of the findings}
+
+\subsection{Why execution-aware control matters}
+
+Planned discussion points:
+\begin{itemize}
+    \item Earlier controller improvements mainly adjust which visible orders should be attempted and when they should be committed.
+    \item The \texttt{v6f} transition suggests that performance is not driven only by demand prioritization, but also by whether the chosen plan can be executed reliably under compute and routing constraints.
+    \item This helps explain why simply increasing pressure-handling aggressiveness is insufficient if the execution layer remains fragile.
+\end{itemize}
+
+\subsection{Why deadline reservation matters}
+
+Planned discussion points:
+\begin{itemize}
+    \item The role of \texttt{v6g} is to convert execution-aware control into a more disciplined deadline-protection mechanism.
+    \item The discussion should explain that reserving execution capacity for urgent orders is especially valuable in a rolling-horizon setting where future flexibility shrinks over time.
+    \item This should be framed as a planning-control insight rather than a claim of optimality.
+\end{itemize}
+
+\subsection{Why the broader formulation still matters}
+
+Planned discussion points:
+\begin{itemize}
+    \item Even though the final thesis line is narrower than the full rich formulation, the broader formulation remains useful for interpreting the practical relevance of the work.
+    \item Depot timing, throughput, staging, heterogeneous fleet, and replanning stability all motivate why the problem cannot be reduced to a simple static benchmark.
+    \item The final discussion should therefore reconnect the retained results back to the richer operational setting introduced earlier in the thesis.
+\end{itemize}
+
+\section{Main limitations}
+
+\subsection{Modeled execution limit is not the same as a real physical limit}
+
+This is the most important limitation and should be stated explicitly.
+
+Planned wording direction:
+\begin{itemize}
+    \item The current evidence may suggest that the retained controller line is approaching the execution limit of the \emph{modeled} system.
+    \item This does \emph{not} prove a real-world physical upper bound.
+    \item Important operational resources such as driver behavior, reload details, dock micro-processes, and other real execution frictions are still simplified.
+\end{itemize}
+
+\subsection{The thesis intentionally narrows scope}
+
+Planned discussion points:
+\begin{itemize}
+    \item The final thesis does not attempt to report every historical experiment branch.
+    \item This improves clarity, but also means that some broader method families are not developed into full final comparisons.
+    \item The discussion should present this as a conscious trade-off between breadth and thesis coherence.
+\end{itemize}
+
+\subsection{Evidence is concentrated in a retained scenario family}
+
+Planned discussion points:
+\begin{itemize}
+    \item The final controller conclusions are drawn within the retained \texttt{EXP01 / Scenario1} line.
+    \item This is appropriate for a focused thesis, but it limits the extent to which broader performance claims should be generalized.
+    \item Any cross-scenario or cross-policy generalization should be described carefully.
+\end{itemize}
+
+\subsection{The routing layer remains a constrained execution backend}
+
+Planned discussion points:
+\begin{itemize}
+    \item The thesis is not only about routing quality; it is about rolling control under a routing backend with finite compute and feasibility constraints.
+    \item That also means the measured gains combine policy improvement with the properties of the retained execution layer.
+    \item The discussion should acknowledge that a stronger or different solver backend could shift the observed bottlenecks.
+\end{itemize}
+
+\subsection{Exact and matheuristic lines are supporting rather than central}
+
+Planned discussion points:
+\begin{itemize}
+    \item The broader research program explored richer exact and matheuristic directions.
+    \item These strengthen the intellectual depth of the thesis, but they are not the core empirical spine of the final manuscript.
+    \item The final discussion should therefore mention them as supporting context, appendix material, or future-work directions rather than as the central thesis contribution.
+\end{itemize}
+
+\subsection{Data and preprocessing assumptions still matter}
+
+Planned discussion points:
+\begin{itemize}
+    \item The thesis depends on a specific interpretation of the raw operational workbook and the processed benchmark pipeline.
+    \item Matrix generation, depot normalization, and field-to-constraint mapping all shape the meaning of the resulting experiments.
+    \item The discussion should acknowledge that conclusions are conditional on those data semantics and preprocessing choices.
+\end{itemize}
+
+\section{What should not be claimed}
+
+This section should be retained as an explicit internal guardrail while drafting. It can later be shortened, but its logic should remain.
+
+\begin{itemize}
+    \item Do not claim that \texttt{EXP00} and \texttt{EXP01} alone establish causal mechanisms; they define baseline and pressure regimes.
+    \item Do not claim that the current modeled execution ceiling is the true physical ceiling of the operation.
+    \item Do not claim that small differences between nearby compute variants are strong mechanism proof by themselves.
+    \item Do not present abandoned or excluded lines as if they were still active main candidates.
+    \item Do not promote exploratory follow-ups into the final thesis contribution unless the surrounding writing map is updated as well.
+\end{itemize}
+
+\section{Implications for future work}
+
+\subsection{Richer execution realism}
+
+Planned future-work points:
+\begin{itemize}
+    \item explicit driver-level execution constraints,
+    \item more realistic dock and reload modeling,
+    \item deeper execution-state feedback into the rolling controller,
+    \item tighter integration between operational uncertainty and dispatch commitments.
+\end{itemize}
+
+\subsection{Stronger integration of the broad formulation and retained controller line}
+
+Planned future-work points:
+\begin{itemize}
+    \item reconnect the final controller line to the richer multi-day formulation more directly,
+    \item study whether stability-aware and depot-aware constraints can be made more central in the retained controller evaluations,
+    \item investigate whether the richer optimization backbone from the broader research program can strengthen the final rolling-control line without sacrificing clarity or reproducibility.
+\end{itemize}
+
+\subsection{Bound quality and exact support}
+
+Planned future-work points:
+\begin{itemize}
+    \item extend reduced exact or bound-oriented methods on smaller instances,
+    \item use stronger lower-bound machinery to better quantify residual optimality gaps,
+    \item connect route-pool or exact-support ideas more directly to the retained controller evaluations.
+\end{itemize}
+
+\subsection{Generalization and robustness}
+
+Planned future-work points:
+\begin{itemize}
+    \item validate on additional depots and pressure regimes,
+    \item test under different temporal shock patterns,
+    \item compare robustness of the retained controller line under broader out-of-distribution conditions,
+    \item examine whether the same control logic remains effective when the execution backend changes.
+\end{itemize}
+
+\section{Recommended final chapter structure}
+
+The final polished version of this chapter should likely follow this order:
+\begin{enumerate}
+    \item recap the main finding in one paragraph,
+    \item interpret the controller progression,
+    \item discuss operational meaning,
+    \item explain the main limitations,
+    \item state the most credible future-work directions,
+    \item end with a transition into the conclusion chapter.
+\end{enumerate}
+
+\section{Drafting checklist}
+
+Before finalizing this chapter, check that the rewrite:
+\begin{itemize}
+    \item stays consistent with the retained experiment scope,
+    \item treats \texttt{v6g\_v6d\_compute300} as the current final controller line,
+    \item keeps \texttt{cap05} and \texttt{automode} in supplementary engineering roles,
+    \item uses \texttt{v6f} as the mechanism transition point,
+    \item keeps excluded or counterexample lines in secondary roles,
+    \item distinguishes modeled limits from real physical limits,
+    \item connects the retained results back to the richer thesis problem,
+    \item ends with future work that is realistic and specific.
+\end{itemize}

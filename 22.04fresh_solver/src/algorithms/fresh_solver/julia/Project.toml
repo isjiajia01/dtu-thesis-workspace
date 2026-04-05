@@ -1,0 +1,8 @@
+name = "FreshSolver"
+uuid = "7f51f4b5-b1b0-4ff1-a8a0-1f1f465ff001"
+authors = ["Zhang Jiajia + Pi"]
+version = "0.1.0"
+
+[deps]
+Dates = "ade2ca70-3891-5945-98fb-dc099432e06a"
+JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"

@@ -1,0 +1,61 @@
+# OS / editor
+.DS_Store
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Generated experiment outputs
+logs/
+hpc_logs/
+results/
+data/results/**
+!data/results/
+!data/results/README.md
+!data/results/EXP_EXP-BASELINE/
+data/results/EXP_EXP-BASELINE/**
+!data/results/EXP_EXP-BASELINE/README.md
+!data/results/EXP_EXP00/
+data/results/EXP_EXP00/**
+!data/results/EXP_EXP00/README.md
+!data/results/EXP_EXP01/
+data/results/EXP_EXP01/**
+!data/results/EXP_EXP01/README.md
+!data/results/EXP_EXP01/_retained/
+data/results/EXP_EXP01/_retained/**
+!data/results/EXP_EXP01/_retained/README.md
+!data/results/EXP_EXP01/_historical/
+data/results/EXP_EXP01/_historical/**
+!data/results/EXP_EXP01/_historical/README.md
+sync_logs/
+
+# Large local data
+/data/processed/vrp_matrix_latest/
+
+# Paper build outputs
+paper/main.pdf
+paper/main.xdv
+paper/*.aux
+paper/*.bbl
+paper/*.bcf
+paper/*.bcf-SAVE-ERROR
+paper/*.blg
+paper/*.fdb_latexmk
+paper/*.fls
+paper/*.log
+paper/*.out
+paper/*.run.xml
+paper/*.synctex.gz
+paper/*.toc
+
+# Python caches
+src/**/__pycache__/
+scripts/**/__pycache__/
+code/**/__pycache__/
+
+# Local tooling
+codex.sh
+
+# Ad-hoc HPC outputs
+exp12_*.out
+exp12_*.err

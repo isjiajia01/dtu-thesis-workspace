@@ -1,0 +1,412 @@
+\chapter{Experimental Design}
+\label{chap:experimental_design}
+
+This chapter should explain \emph{how} the thesis evaluates the proposed rolling-horizon delivery framework, \emph{why} the retained experiment scope is sufficient for the thesis claims, and \emph{how} reproducibility and auditability are maintained. The chapter should read as the bridge between the methodology chapters and the results chapter.
+
+\section{Chapter Purpose and Writing Strategy}
+
+The purpose of this chapter is fourfold:
+\begin{enumerate}
+    \item define the retained experiment scope of the thesis;
+    \item describe the datasets, scenarios, and evaluation pipeline;
+    \item justify the choice of baselines, controller progression, and performance metrics;
+    \item document the reproducibility and audit process.
+\end{enumerate}
+
+The writing tone of this chapter should be precise and restrained. It should avoid overstating causal conclusions and should instead focus on:
+\begin{itemize}
+    \item what is evaluated,
+    \item under which assumptions,
+    \item with which controls,
+    \item and by which output artifacts.
+\end{itemize}
+
+\noindent\textbf{Writing rule for this chapter:}
+the main experimental backbone should remain limited to:
+\begin{itemize}
+    \item \texttt{EXP00},
+    \item \texttt{EXP-BASELINE} where needed as implementation context,
+    \item \texttt{EXP01},
+    \item and the \texttt{EXP01 / Scenario1} controller line:
+    \texttt{v2 $\rightarrow$ v4 $\rightarrow$ v5 $\rightarrow$ v6f $\rightarrow$ v6g}.
+\end{itemize}
+
+\section{Retained Experiment Scope}
+
+This section should clearly state that the thesis does not attempt to report every historical experiment branch. Instead, it intentionally narrows the evidence base to a retained, reproducible set of experiments.
+
+\subsection{Why the Scope is Narrowed}
+
+Write this subsection as a methodological decision, not as a limitation to hide:
+\begin{itemize}
+    \item the broader research program explored a richer design space;
+    \item however, a graduation thesis requires a stable and reproducible central line;
+    \item therefore, the final experimental scope is reduced to the smallest set of experiments that still supports the thesis claims.
+\end{itemize}
+
+\noindent Suggested framing:
+\begin{quote}
+The broader research process considered richer optimization and controller variants, but the final thesis adopts a deliberately retained experiment scope in order to keep the comparison protocol stable, interpretable, and reproducible.
+\end{quote}
+
+\subsection{Official Experiment Families}
+
+This subsection should define the meaning of the retained experiments:
+\begin{description}
+    \item[\texttt{EXP00}] normal-operation reference experiment;
+    \item[\texttt{EXP-BASELINE}] implementation baseline, mainly useful for contextualizing the pipeline;
+    \item[\texttt{EXP01}] crunch-condition baseline experiment;
+    \item[\texttt{Scenario1}] controller comparison line built on top of \texttt{EXP01}.
+\end{description}
+
+\noindent The key message is:
+\begin{itemize}
+    \item \texttt{EXP00} and \texttt{EXP01} define the operational pressure contrast;
+    \item \texttt{Scenario1} defines the method-improvement line inside the stressed regime.
+\end{itemize}
+
+\section{Data and Instance Construction}
+
+This section should explain the data inputs used by the retained experiments and how they are transformed into runnable simulation instances.
+
+\subsection{Raw Data Source}
+
+State that the source data originate from the operational workbook and that the raw data are treated as read-only. Mention that the raw workbook provides:
+\begin{itemize}
+    \item orders,
+    \item warehouse/depot settings,
+    \item vehicle settings.
+\end{itemize}
+
+This subsection should briefly summarize the operational semantics already established earlier in the thesis:
+\begin{itemize}
+    \item release dates and due dates,
+    \item feasible service windows,
+    \item depot-specific operational timing,
+    \item vehicle availability and capacity rules.
+\end{itemize}
+
+\subsection{Processed Benchmark and Matrix Inputs}
+
+This subsection should define the retained processed inputs:
+\begin{itemize}
+    \item processed benchmark instance, with Herlev as the main thesis benchmark;
+    \item OSRM-based travel-time and distance matrices;
+    \item processed benchmark variants for additional depots where relevant for out-of-distribution validation.
+\end{itemize}
+
+\noindent Important wording:
+\begin{itemize}
+    \item emphasize that the retained thesis line uses road-network matrices rather than Euclidean approximations;
+    \item describe processed data as reproducible artifacts derived from the raw source.
+\end{itemize}
+
+\subsection{Instance Semantics for the Retained Thesis Line}
+
+This subsection should explain what one experiment instance means in practice:
+\begin{itemize}
+    \item a rolling-horizon multi-day planning problem,
+    \item evaluated day by day,
+    \item with only released-but-undelivered orders visible,
+    \item and with routing solved subject to same-day operational limits.
+\end{itemize}
+
+\section{Scenario Design}
+
+This section should explain the operational conditions under which the experiments are run.
+
+\subsection{Normal and Crunch Regimes}
+
+Define the two main evaluation regimes:
+\begin{itemize}
+    \item \texttt{EXP00}: business-as-usual reference;
+    \item \texttt{EXP01}: stressed single-wave or crunch reference.
+\end{itemize}
+
+This subsection should answer:
+\begin{itemize}
+    \item why the thesis needs both a normal and a stressed regime;
+    \item why performance under pressure is the key setting for evaluating controller improvements.
+\end{itemize}
+
+\subsection{Scenario1 as the Main Method Comparison Regime}
+
+This subsection should state that \texttt{Scenario1} is not a separate unrelated experiment family. It is the main controller-comparison setting within the retained \texttt{EXP01} stress regime.
+
+The central message should be:
+\begin{itemize}
+    \item \texttt{EXP01} defines the stressed environment;
+    \item \texttt{Scenario1} compares alternative controller designs under that environment;
+    \item this makes the controller line directly interpretable as a method progression under pressure.
+\end{itemize}
+
+\subsection{Out-of-Distribution Depot Evaluation}
+
+This subsection should explain why selected OOD depot runs are included:
+\begin{itemize}
+    \item to test whether the final retained controller line is overly tuned to one depot;
+    \item to provide a compact generalization check without turning the thesis into a full transfer-learning study.
+\end{itemize}
+
+\noindent Important caution:
+OOD evidence should be presented as supportive generalization evidence, not as proof of universal robustness.
+
+\section{Baseline and Method Comparison Design}
+
+This section should define which methods are compared and why.
+
+\subsection{Operational Baselines}
+
+Describe the baseline hierarchy:
+\begin{enumerate}
+    \item normal-operation baseline via \texttt{EXP00},
+    \item crunch baseline via \texttt{EXP01},
+    \item controller progression within \texttt{Scenario1}.
+\end{enumerate}
+
+The baseline logic should be written so that the reader understands:
+\begin{itemize}
+    \item first, what degradation occurs under stress;
+    \item second, how controller upgrades recover performance under that stress.
+\end{itemize}
+
+\subsection{Retained Controller Progression}
+
+This subsection should describe the final controller line in prose:
+\begin{description}
+    \item[\texttt{v2}] early robust baseline;
+    \item[\texttt{v4}] event-driven commitment mechanism;
+    \item[\texttt{v5}] risk-budgeted admission / commitment / release logic;
+    \item[\texttt{v6f}] execution-aware transition step;
+    \item[\texttt{v6g}] final deadline-reservation endpoint and main thesis candidate.
+\end{description}
+
+This subsection should not yet present the results. It should only explain the intended comparison logic and what each step is meant to test.
+
+\subsection{Excluded or Secondary Variants}
+
+To keep the chapter clean, state explicitly that some variants are not part of the retained main line:
+\begin{itemize}
+    \item historical branches that do not support the final thesis claim;
+    \item counterexample variants such as diversification-focused alternatives;
+    \item exploratory follow-up variants that are not required to establish the main thesis result.
+\end{itemize}
+
+The goal is to show disciplined scope control.
+
+\section{Execution Protocol}
+
+This section should explain how each experiment is actually run.
+
+\subsection{Rolling-Horizon Evaluation}
+
+Explain the daily loop:
+\begin{enumerate}
+    \item build the visible set for the current day;
+    \item choose the controller action or policy configuration;
+    \item solve the day-level routing problem under the computation budget;
+    \item commit current-day execution;
+    \item roll to the next day and repeat.
+\end{enumerate}
+
+This subsection should make clear that evaluation is policy-based, not one-shot static optimization.
+
+\subsection{Computation Budgets}
+
+This subsection should explain the role of bounded compute in the experiment design:
+\begin{itemize}
+    \item the thesis evaluates methods under finite decision-time budgets;
+    \item compute budgets are treated as part of the operational setting;
+    \item comparisons must therefore keep compute settings explicit whenever materially relevant.
+\end{itemize}
+
+\noindent Include the thesis-safe idea that:
+\begin{itemize}
+    \item improved performance should not be attributed to physical expansion if it can already be explained by controller logic or compute allocation;
+    \item probe experiments should be described carefully and not oversold.
+\end{itemize}
+
+\subsection{Fleet and Physical Controls}
+
+This subsection should list the physical or semi-physical controls that must remain explicit during comparison:
+\begin{itemize}
+    \item maximum trips per vehicle,
+    \item active vehicle count,
+    \item route duration limits,
+    \item compute budget,
+    \item fixed scenario definition.
+\end{itemize}
+
+The chapter should explain that these controls are held constant unless an experiment explicitly probes them.
+
+\section{Metrics and Evaluation Criteria}
+
+This section should define what the thesis measures and why.
+
+\subsection{Primary Metrics}
+
+List the main outcome metrics:
+\begin{itemize}
+    \item service rate,
+    \item number of failed orders,
+    \item penalized cost,
+    \item carryover or backlog-related statistics where relevant.
+\end{itemize}
+
+Explain that these metrics capture both delivery quality and operational failure.
+
+\subsection{Secondary Metrics}
+
+List secondary or diagnostic metrics:
+\begin{itemize}
+    \item travel cost and duration,
+    \item runtime,
+    \item overdue rate,
+    \item route-level or execution-level diagnostics,
+    \item stability-related measures where available.
+\end{itemize}
+
+\subsection{Stability and Interpretation Metrics}
+
+Because the broader research line includes plan stability and operational realism, this subsection should explain:
+\begin{itemize}
+    \item why stability matters even if it is not always the headline metric;
+    \item how stability-aware interpretation remains relevant to the thesis;
+    \item how execution-aware analysis helps interpret residual failure gaps.
+\end{itemize}
+
+\section{Reproducibility and Audit Trail}
+
+This section should explain how official thesis experiments are kept reproducible.
+
+\subsection{Registered Experiment Definitions}
+
+Describe the role of formal experiment definitions and script-controlled registration. Explain that:
+\begin{itemize}
+    \item official experiment families are explicitly registered;
+    \item ad hoc runs do not define the thesis narrative;
+    \item the experiment definition layer provides a stable interface between method description and execution.
+\end{itemize}
+
+\subsection{HPC Execution Policy}
+
+State that formal runs are executed through the cluster workflow rather than through casual local execution. This subsection should include:
+\begin{itemize}
+    \item why official runs use HPC,
+    \item why local execution is limited to smoke tests, dry runs, and lightweight validation,
+    \item why this distinction matters for experimental discipline.
+\end{itemize}
+
+\subsection{Output Artifacts and Audit Files}
+
+Describe the expected outputs of an official experiment:
+\begin{itemize}
+    \item per-seed summaries,
+    \item aggregate statistics,
+    \item controller-specific analysis outputs,
+    \item logs and audit traces,
+    \item figure-building inputs where applicable.
+\end{itemize}
+
+The key idea is that the thesis should be traceable from:
+\begin{center}
+configuration $\rightarrow$ execution $\rightarrow$ outputs $\rightarrow$ tables/figures.
+\end{center}
+
+\section{Statistical and Comparative Logic}
+
+This section should explain how comparisons are interpreted.
+
+\subsection{Seeded Comparisons}
+
+State that comparisons are based on controlled repeated runs across seeds where applicable. Emphasize:
+\begin{itemize}
+    \item seed-matched comparisons are preferred;
+    \item reported averages should reflect reproducible aggregates rather than anecdotal best runs.
+\end{itemize}
+
+\subsection{Paired Interpretation}
+
+Where the experiment pipeline supports it, explain the use of paired comparisons:
+\begin{itemize}
+    \item same scenario,
+    \item same seed structure,
+    \item controlled method change.
+\end{itemize}
+
+This subsection should keep the interpretation modest:
+\begin{itemize}
+    \item the goal is comparative clarity, not overclaimed causal proof.
+\end{itemize}
+
+\subsection{Guardrails Against Overclaiming}
+
+This subsection should explicitly connect the experimental design to claim discipline:
+\begin{itemize}
+    \item baseline differences define pressure effects;
+    \item controller differences define method comparisons;
+    \item small numerical differences should not automatically be interpreted as strong mechanism proof;
+    \item model-side execution limits should not be conflated with real-world physical limits.
+\end{itemize}
+
+\section{Threats to Validity}
+
+This section should make the chapter look mature and self-aware.
+
+\subsection{Internal Validity}
+
+Potential issues:
+\begin{itemize}
+    \item limited retained experiment scope,
+    \item dependence on selected stress scenarios,
+    \item bounded runtime affecting final routing quality.
+\end{itemize}
+
+\subsection{External Validity}
+
+Potential issues:
+\begin{itemize}
+    \item one main benchmark depot dominates the retained thesis line,
+    \item OOD checks are supportive but still limited,
+    \item some real operational resources remain abstracted in the model.
+\end{itemize}
+
+\subsection{Measurement Validity}
+
+Potential issues:
+\begin{itemize}
+    \item service-rate improvements may arise from multiple interacting mechanisms;
+    \item some secondary metrics are diagnostic rather than direct business outcomes;
+    \item absence of a metric in the headline tables does not mean it is irrelevant to interpretation.
+\end{itemize}
+
+\section{Chapter-to-Results Handoff}
+
+This short concluding section should explain how the next chapter will present the evidence.
+
+Suggested transition logic:
+\begin{enumerate}
+    \item first, compare \texttt{EXP00} and \texttt{EXP01} to quantify stress degradation;
+    \item second, analyze the retained \texttt{Scenario1} controller progression;
+    \item third, identify the retained main candidate \texttt{v6g\_v6d\_compute300};
+    \item fourth, use OOD runs as a compact generalization check;
+    \item fifth, place \texttt{automode} and the retained \texttt{DATA003} east/west lines in a controlled auxiliary role;
+    \item finally, discuss what the evidence does and does not establish.
+\end{enumerate}
+
+\section{Writing Checklist for Final Revision}
+
+Before finalizing this chapter, verify that the text does all of the following:
+\begin{itemize}
+    \item clearly defines \texttt{EXP00}, \texttt{EXP01}, and \texttt{Scenario1};
+    \item explains why the scope is narrowed;
+    \item makes the controller progression explicit;
+    \item names the primary benchmark and matrix assumptions;
+    \item defines the primary and secondary metrics;
+    \item explains the HPC and reproducibility workflow;
+    \item avoids writing results too early;
+    \item stays consistent with the retained writing map and claim guardrails.
+\end{itemize}
+
+\noindent\textbf{Author note:}
+when this chapter is rewritten from plan into final prose, it should remain a methodological chapter. It should set up the evaluation cleanly, but it should save all substantive performance claims, rankings, and final interpretations for the results and discussion chapters.

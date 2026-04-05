@@ -1,0 +1,1488 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Thesis Progress — Professor Meeting</title>
+        <style>
+            :root {
+                --bg: #0d1117;
+                --surface: #161b22;
+                --surface2: #21262d;
+                --border: #30363d;
+                --text: #e6edf3;
+                --muted: #8b949e;
+                --accent: #58a6ff;
+                --accent2: #3fb950;
+                --accent3: #d2a679;
+                --accent4: #ff7b72;
+                --accent5: #bc8cff;
+                --yellow: #e3b341;
+            }
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            body {
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui,
+                    sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                height: 100vh;
+                overflow: hidden;
+                user-select: none;
+            }
+
+            /* ─── Layout ─── */
+            .deck {
+                width: 100vw;
+                height: 100vh;
+                position: relative;
+            }
+
+            .slide {
+                position: absolute;
+                inset: 0;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 60px 80px;
+                opacity: 0;
+                transform: translateX(60px);
+                transition:
+                    opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                    transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: none;
+            }
+
+            .slide.active {
+                opacity: 1;
+                transform: translateX(0);
+                pointer-events: all;
+            }
+
+            .slide.exit {
+                opacity: 0;
+                transform: translateX(-60px);
+            }
+
+            .slide-shell {
+                width: 100%;
+            }
+
+            .slide-shell-md {
+                max-width: 900px;
+            }
+
+            .slide-shell-lg {
+                max-width: 1060px;
+            }
+
+            .section-intro {
+                margin-top: 10px;
+            }
+
+            .section-intro-wide {
+                max-width: 900px;
+            }
+
+            /* ─── Progress ─── */
+            .progress-bar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                height: 3px;
+                background: linear-gradient(
+                    90deg,
+                    var(--accent),
+                    var(--accent5)
+                );
+                transition: width 0.4s ease;
+                z-index: 100;
+            }
+
+            .slide-counter {
+                position: fixed;
+                bottom: 28px;
+                right: 36px;
+                font-size: 13px;
+                color: var(--muted);
+                letter-spacing: 0.05em;
+                z-index: 100;
+            }
+
+            .nav-hint {
+                position: fixed;
+                bottom: 28px;
+                left: 36px;
+                font-size: 12px;
+                color: var(--border);
+                z-index: 100;
+            }
+
+            /* ─── Nav buttons ─── */
+            .nav-btn {
+                position: fixed;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 44px;
+                height: 44px;
+                border: 1px solid var(--border);
+                background: var(--surface);
+                color: var(--muted);
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: all 0.2s;
+                z-index: 100;
+            }
+            .nav-btn:hover {
+                border-color: var(--accent);
+                color: var(--accent);
+            }
+            .nav-prev {
+                left: 20px;
+            }
+            .nav-next {
+                right: 20px;
+            }
+
+            /* ─── Typography ─── */
+            .label {
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 0.12em;
+                text-transform: uppercase;
+                color: var(--accent);
+                margin-bottom: 18px;
+            }
+
+            h1 {
+                font-size: clamp(32px, 4vw, 52px);
+                font-weight: 700;
+                line-height: 1.1;
+                letter-spacing: -0.02em;
+                color: var(--text);
+            }
+
+            h2 {
+                font-size: clamp(24px, 3vw, 38px);
+                font-weight: 700;
+                line-height: 1.15;
+                letter-spacing: -0.01em;
+            }
+
+            h3 {
+                font-size: 18px;
+                font-weight: 600;
+                color: var(--text);
+                margin-bottom: 10px;
+            }
+
+            p,
+            li {
+                font-size: 16px;
+                line-height: 1.65;
+                color: var(--muted);
+            }
+
+            strong {
+                color: var(--text);
+                font-weight: 600;
+            }
+
+            .subtitle {
+                font-size: 18px;
+                color: var(--muted);
+                margin-top: 16px;
+                max-width: 640px;
+                line-height: 1.6;
+            }
+
+            /* ─── Highlight box ─── */
+            .highlight-box {
+                background: rgba(88, 166, 255, 0.08);
+                border: 1px solid rgba(88, 166, 255, 0.25);
+                border-radius: 10px;
+                padding: 16px 22px;
+                margin-top: 20px;
+                width: 100%;
+                max-width: 820px;
+            }
+
+            .highlight-box p {
+                font-size: 14px;
+            }
+
+            .arrival-flow {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+                width: 100%;
+                max-width: 1040px;
+                margin-top: 28px;
+            }
+
+            .day-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 18px;
+                position: relative;
+            }
+
+            .day-card.active-day {
+                border-color: rgba(88, 166, 255, 0.45);
+                box-shadow: 0 0 0 1px rgba(88, 166, 255, 0.18) inset;
+            }
+
+            .day-head {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 14px;
+            }
+
+            .day-head strong {
+                font-size: 18px;
+                color: var(--text);
+            }
+
+            .mini-tag {
+                display: inline-block;
+                padding: 3px 8px;
+                border-radius: 999px;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 0.05em;
+            }
+
+            .tag-blue {
+                background: rgba(88, 166, 255, 0.14);
+                color: var(--accent);
+            }
+            .tag-green {
+                background: rgba(63, 185, 80, 0.14);
+                color: var(--accent2);
+            }
+            .tag-orange {
+                background: rgba(227, 179, 65, 0.14);
+                color: var(--yellow);
+            }
+
+            .event-list {
+                list-style: none;
+                padding: 0;
+                margin: 0 0 12px 0;
+            }
+
+            .event-list li {
+                font-size: 13px;
+                line-height: 1.5;
+                color: var(--muted);
+                padding: 8px 0;
+                border-bottom: 1px solid var(--surface2);
+            }
+
+            .event-list li:last-child {
+                border-bottom: 0;
+            }
+
+            .order-pill-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 8px;
+                margin-top: 12px;
+            }
+
+            .order-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                padding: 5px 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                background: rgba(88, 166, 255, 0.08);
+                color: var(--text);
+                border: 1px solid rgba(88, 166, 255, 0.18);
+            }
+
+            .pill-new {
+                background: rgba(63, 185, 80, 0.12);
+                border-color: rgba(63, 185, 80, 0.25);
+            }
+            .pill-fixed {
+                background: rgba(227, 179, 65, 0.12);
+                border-color: rgba(227, 179, 65, 0.25);
+            }
+            .pill-future {
+                background: rgba(188, 140, 255, 0.12);
+                border-color: rgba(188, 140, 255, 0.25);
+            }
+
+            .compare-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 18px;
+                width: 100%;
+                max-width: 1040px;
+                margin-top: 20px;
+            }
+
+            .compare-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 18px;
+            }
+
+            .compare-card.baseline {
+                border-top: 3px solid var(--accent4);
+            }
+
+            .compare-card.improved {
+                border-top: 3px solid var(--accent);
+            }
+
+            .step-stack {
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 14px;
+            }
+
+            .step-box {
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 10px 12px;
+            }
+
+            .step-box strong {
+                display: block;
+                font-size: 13px;
+                margin-bottom: 4px;
+            }
+
+            .step-box p {
+                font-size: 12px;
+                line-height: 1.45;
+            }
+
+            .route-strip {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-top: 12px;
+                flex-wrap: wrap;
+            }
+
+            .hub {
+                width: 34px;
+                height: 34px;
+                border-radius: 999px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: 700;
+                background: rgba(88, 166, 255, 0.12);
+                color: var(--accent);
+                border: 1px solid rgba(88, 166, 255, 0.25);
+            }
+
+            .route-arrow {
+                color: var(--muted);
+                font-size: 14px;
+            }
+
+            .stop-pill {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                min-width: 34px;
+                height: 34px;
+                padding: 0 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 600;
+                border: 1px solid var(--border);
+                background: var(--surface2);
+                color: var(--text);
+            }
+
+            .stop-fixed {
+                background: rgba(227, 179, 65, 0.14);
+                border-color: rgba(227, 179, 65, 0.24);
+            }
+            .stop-new {
+                background: rgba(63, 185, 80, 0.14);
+                border-color: rgba(63, 185, 80, 0.24);
+            }
+            .stop-move {
+                background: rgba(188, 140, 255, 0.14);
+                border-color: rgba(188, 140, 255, 0.24);
+            }
+
+            .route-caption {
+                font-size: 12px;
+                color: var(--muted);
+                margin-top: 8px;
+                line-height: 1.45;
+            }
+
+            .benchmark-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 18px;
+                width: 100%;
+                max-width: 1040px;
+                margin-top: 24px;
+            }
+
+            .benchmark-grid-single {
+                grid-template-columns: minmax(320px, 520px);
+                justify-content: center;
+            }
+
+            .benchmark-card {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 14px;
+                padding: 20px;
+            }
+
+            .benchmark-card.reference {
+                border-top: 3px solid var(--accent2);
+            }
+
+            .benchmark-card.baseline {
+                border-top: 3px solid var(--accent4);
+            }
+
+            .benchmark-card.candidate {
+                border-top: 3px solid var(--accent);
+            }
+
+            .benchmark-kicker {
+                font-size: 11px;
+                text-transform: uppercase;
+                letter-spacing: 0.08em;
+                color: var(--muted);
+                margin-bottom: 8px;
+            }
+
+            .benchmark-card strong {
+                display: block;
+                font-size: 20px;
+                line-height: 1.2;
+                margin-bottom: 10px;
+            }
+
+            .benchmark-metric {
+                font-size: 14px;
+                line-height: 1.55;
+                margin-top: 6px;
+            }
+
+            .benchmark-metric span {
+                color: var(--text);
+                font-weight: 600;
+            }
+
+            .benchmark-note {
+                margin-top: 14px;
+                padding-top: 12px;
+                border-top: 1px solid var(--surface2);
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .framework-board {
+                width: 100%;
+                max-width: 980px;
+                margin-top: 22px;
+                padding: 18px;
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+            }
+
+            .framework-arrow {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 20px;
+                color: var(--muted);
+            }
+
+            .framework-note {
+                border-radius: 10px;
+                padding: 10px 12px;
+                font-size: 12px;
+                line-height: 1.45;
+                border: 1px solid var(--border);
+                background: rgba(88, 166, 255, 0.06);
+                color: var(--muted);
+            }
+
+            .highlight-box.warn {
+                background: rgba(255, 123, 114, 0.06);
+                border-color: rgba(255, 123, 114, 0.2);
+            }
+
+            .highlight-box.warn strong {
+                color: var(--accent4);
+            }
+
+            .pipeline-row {
+                display: grid;
+                grid-template-columns: 1.05fr 0.22fr 1.05fr 0.22fr 1.25fr 0.22fr 1.05fr;
+                gap: 8px;
+                align-items: center;
+            }
+
+            .pipeline-box {
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 14px 14px;
+                min-height: 128px;
+            }
+
+            .pipeline-box strong {
+                display: block;
+                font-size: 13px;
+                color: var(--text);
+                margin-bottom: 6px;
+            }
+
+            .pipeline-box p {
+                font-size: 12px;
+                line-height: 1.45;
+            }
+
+            .pipeline-box em {
+                font-style: normal;
+                color: var(--accent);
+                font-weight: 600;
+            }
+
+            .pipeline-sub {
+                margin-top: 10px;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+
+            .pipeline-mini {
+                background: rgba(88, 166, 255, 0.06);
+                border: 1px solid rgba(88, 166, 255, 0.16);
+                border-radius: 10px;
+                padding: 8px 10px;
+            }
+
+            .pipeline-mini strong {
+                display: block;
+                font-size: 11px;
+                margin-bottom: 3px;
+            }
+
+            .pipeline-mini p {
+                font-size: 11px;
+                line-height: 1.4;
+            }
+
+            .pipeline-side {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+                margin-top: 12px;
+            }
+
+            /* ─── Slide-specific ─── */
+            .slide-title {
+                background: radial-gradient(
+                    ellipse 80% 60% at 50% 100%,
+                    rgba(88, 166, 255, 0.06) 0%,
+                    transparent 70%
+                );
+                text-align: center;
+            }
+
+            .meta-row {
+                display: flex;
+                gap: 32px;
+                margin-top: 36px;
+                font-size: 14px;
+                color: var(--muted);
+            }
+
+            .meta-row span {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            /* ─── Title slide special ─── */
+            .title-tag {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                font-size: 13px;
+                color: var(--accent);
+                background: rgba(88, 166, 255, 0.08);
+                border: 1px solid rgba(88, 166, 255, 0.2);
+                border-radius: 20px;
+                padding: 6px 16px;
+                margin-bottom: 28px;
+            }
+
+            .dot-live {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                background: var(--accent2);
+                animation: pulse 1.8s ease-in-out infinite;
+            }
+
+            @keyframes pulse {
+                0%,
+                100% {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+                50% {
+                    opacity: 0.5;
+                    transform: scale(0.75);
+                }
+            }
+
+            @media (max-width: 1200px) {
+                .slide {
+                    padding: 48px 56px;
+                    justify-content: flex-start;
+                    overflow-y: auto;
+                }
+
+                .progress-bar,
+                .slide-counter,
+                .nav-hint,
+                .nav-btn {
+                    position: fixed;
+                }
+
+                .compare-grid,
+                .pipeline-side {
+                    grid-template-columns: 1fr;
+                }
+
+                .pipeline-row {
+                    grid-template-columns: 1fr;
+                    gap: 12px;
+                }
+
+                .framework-arrow {
+                    transform: rotate(90deg);
+                    min-height: 24px;
+                }
+
+                .arrival-flow {
+                    grid-template-columns: 1fr;
+                }
+
+                .benchmark-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            @media (max-height: 820px) {
+                body {
+                    overflow: auto;
+                }
+
+                .slide {
+                    justify-content: flex-start;
+                    padding-top: 72px;
+                    padding-bottom: 72px;
+                    overflow-y: auto;
+                }
+
+                .meta-row {
+                    margin-top: 24px;
+                    gap: 18px;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="progress-bar" id="progressBar"></div>
+        <div class="slide-counter" id="slideCounter"></div>
+        <div class="nav-hint">← → to navigate</div>
+
+        <button class="nav-btn nav-prev" onclick="navigate(-1)">‹</button>
+        <button class="nav-btn nav-next" onclick="navigate(1)">›</button>
+
+        <div class="deck" id="deck">
+            <div class="slide active" data-index="0">
+                <div class="slide-shell slide-shell-lg">
+                    <div class="label">04 — 22.02 Big Picture</div>
+                    <h2>The whole solver picture in 22.02</h2>
+                    <p class="section-intro section-intro-wide">
+                        <strong>22.02</strong> is not just a daily routing
+                        solver. It is a <strong>rolling-horizon multi-day
+                        method</strong> with one main heuristic line, one
+                        strengthening layer, and one exact-support layer.
+                    </p>
+
+                    <div class="compare-grid">
+                        <div class="compare-card improved">
+                            <div class="day-head">
+                                <strong>Main active line</strong>
+                                <span class="mini-tag tag-blue"
+                                    >two-level ALNS</span
+                                >
+                            </div>
+                            <div class="step-stack">
+                                <div class="step-box">
+                                    <strong>Rolling horizon</strong>
+                                    <p>
+                                        Solve several days together, then
+                                        commit only the current day.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Cross-day search</strong>
+                                    <p>
+                                        Move flexible orders across feasible
+                                        service days.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Within-day rebuilding</strong>
+                                    <p>
+                                        Rebuild daily routes and evaluate the
+                                        updated multi-day incumbent.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="compare-card baseline">
+                            <div class="day-head">
+                                <strong>Support layers</strong>
+                                <span class="mini-tag tag-orange"
+                                    >RSP + exact track</span
+                                >
+                            </div>
+                            <div class="step-stack">
+                                <div class="step-box">
+                                    <strong>RSP intensification</strong>
+                                    <p>
+                                        Recombine good <strong>current-day
+                                        routes</strong> found during ALNS.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Restricted master</strong>
+                                    <p>
+                                        Improve the incumbent if a better
+                                        route-pool combination exists.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Exact support</strong>
+                                    <p>
+                                        Column generation / pricing is used for
+                                        bounds and appendix-level support, not
+                                        as the main operational solver.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px">
+                        <p>
+                            <strong>One-sentence summary:</strong>
+                            in 22.02, <strong>ALNS is the main search
+                            engine</strong>, <strong>RSP is an optional
+                            current-day polishing step</strong>, and the
+                            <strong>exact line is mainly for lower bounds and
+                            technical support</strong>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-index="1">
+                <div class="slide-shell slide-shell-lg">
+                    <div class="label">05 — Current-Day Route Pool</div>
+                    <h2>A simple example closer to the current 22.02 code</h2>
+                    <p class="section-intro section-intro-wide">
+                        ALNS searches a <strong>multi-day</strong> solution, but
+                        the current implementation mainly sends
+                        <strong>today's routes</strong> into the RSP pool.
+                    </p>
+
+                    <div class="highlight-box" style="margin-bottom: 20px">
+                        <p>
+                            <strong>Setup:</strong> today is
+                            <strong>Monday</strong>. Two vans are available
+                            today. Orders <code>o1, o2, o3</code> can still be
+                            served today, while <code>o4</code> can be pushed
+                            to Tuesday if needed. The useful case is when ALNS
+                            stores several good Monday routes, but its current
+                            incumbent still keeps one order for Tuesday.
+                        </p>
+                    </div>
+
+                    <div class="arrival-flow">
+                        <div class="day-card active-day">
+                            <div class="day-head">
+                                <strong>ALNS Iteration A</strong>
+                                <span class="mini-tag tag-blue"
+                                    >current day = Mon</span
+                                >
+                            </div>
+                            <ul class="event-list">
+                                <li>
+                                    <strong>Mon:</strong> route
+                                    <code>rA = [o1, o2]</code>, cost
+                                    <code>38</code>
+                                </li>
+                                <li>
+                                    <strong>Tue:</strong> later route set
+                                    <code>[o3, o4]</code>, cost
+                                    <code>54</code>
+                                </li>
+                                <li>
+                                    <strong>Pool contribution:</strong> save
+                                    only <code>rA</code> for current-day
+                                    intensification
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="day-card active-day">
+                            <div class="day-head">
+                                <strong>ALNS Iteration B</strong>
+                                <span class="mini-tag tag-green"
+                                    >different day assignment</span
+                                >
+                            </div>
+                            <ul class="event-list">
+                                <li>
+                                    <strong>Mon:</strong> route
+                                    <code>rB = [o3]</code>, cost
+                                    <code>10</code>
+                                </li>
+                                <li>
+                                    <strong>Tue:</strong> later route set
+                                    <code>[o2, o4]</code>, cost
+                                    <code>52</code>
+                                </li>
+                                <li>
+                                    <strong>Pool contribution:</strong> add
+                                    <code>rB</code> to the Monday route pool
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="day-card">
+                            <div class="day-head">
+                                <strong>ALNS Iteration C</strong>
+                                <span class="mini-tag tag-orange"
+                                    >another variant</span
+                                >
+                            </div>
+                            <ul class="event-list">
+                                <li>
+                                    <strong>Mon:</strong> route
+                                    <code>rC = [o1, o3]</code>, cost
+                                    <code>31</code>
+                                </li>
+                                <li>
+                                    <strong>Tue:</strong> later route set
+                                    <code>[o2, o4]</code>, cost
+                                    <code>53</code>
+                                </li>
+                                <li>
+                                    <strong>Pool contribution:</strong> add
+                                    <code>rC</code> to the Monday route pool
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px">
+                        <p>
+                            <strong>What enters RSP here?</strong> not the whole
+                            Monday-Tuesday-Wednesday plan. The pool is closer to
+                            <strong>{rA(38), rB(10), rC(31)}</strong>: candidate
+                            <strong>current-day routes</strong> collected while
+                            the broader multi-day ALNS search runs.
+                        </p>
+                    </div>
+
+                    <div class="highlight-box warn" style="margin-top: 18px">
+                        <p>
+                            <strong>Read this carefully:</strong> RSP does
+                            <strong>not</strong> receive Tuesday routes here.
+                            It only sees a small menu of Monday columns and
+                            tries to choose the best compatible subset.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-index="2">
+                <div class="slide-shell slide-shell-lg">
+                    <div class="label">06 — Incumbent Evolution</div>
+                    <h2>Walk through one multi-day incumbent story</h2>
+                    <p class="section-intro section-intro-wide">
+                        The point is not that RSP sees the whole horizon as one
+                        master. The point is that ALNS keeps changing the
+                        <strong>multi-day incumbent</strong>, while today's
+                        routes accumulate in a reusable pool.
+                    </p>
+
+                    <div class="arrival-flow">
+                        <div class="day-card active-day">
+                            <div class="day-head">
+                                <strong>Incumbent after Iteration A</strong>
+                                <span class="mini-tag tag-blue"
+                                    >cost = 122</span
+                                >
+                            </div>
+                            <ul class="event-list">
+                                <li>
+                                    <strong>Mon:</strong>
+                                    <code>rA = [o1, o2]</code> cost
+                                    <code>38</code>
+                                </li>
+                                <li>
+                                    <strong>Tue:</strong>
+                                    <code>[o3, o4]</code> cost
+                                    <code>54</code>
+                                </li>
+                                <li>
+                                    <strong>Penalty/other terms:</strong>
+                                    <code>30</code>
+                                </li>
+                            </ul>
+                            <p class="route-caption">
+                                First feasible multi-day incumbent.
+                            </p>
+                        </div>
+
+                        <div class="day-card active-day">
+                            <div class="day-head">
+                                <strong>Incumbent after Iteration B</strong>
+                                <span class="mini-tag tag-green"
+                                    >cost = 111</span
+                                >
+                            </div>
+                            <ul class="event-list">
+                                <li>
+                                    <strong>Mon:</strong>
+                                    <code>rB = [o3]</code> cost
+                                    <code>10</code>
+                                </li>
+                                <li>
+                                    <strong>Tue:</strong>
+                                    <code>[o2, o4]</code> cost
+                                    <code>52</code>
+                                </li>
+                                <li>
+                                    <strong>Penalty/other terms:</strong>
+                                    <code>28</code>
+                                </li>
+                            </ul>
+                            <p class="route-caption">
+                                Better cross-day arrangement, better incumbent.
+                            </p>
+                        </div>
+
+                        <div class="day-card">
+                            <div class="day-head">
+                                <strong>Incumbent after Iteration C</strong>
+                                <span class="mini-tag tag-orange"
+                                    >cost = 109</span
+                                >
+                            </div>
+                            <ul class="event-list">
+                                <li>
+                                    <strong>Mon:</strong>
+                                    <code>rC = [o1, o3]</code> cost
+                                    <code>31</code>
+                                </li>
+                                <li>
+                                    <strong>Tue:</strong>
+                                    <code>[o2, o4]</code> cost
+                                    <code>53</code>
+                                </li>
+                                <li>
+                                    <strong>Penalty/other terms:</strong>
+                                    <code>27</code>
+                                </li>
+                            </ul>
+                            <p class="route-caption">
+                                Best ALNS incumbent so far is now
+                                <strong>111</strong>, with Monday still using
+                                only <code>rC</code>.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px">
+                        <p>
+                            <strong>Important:</strong> ALNS keeps the full
+                            multi-day incumbent, but the reusable route pool for
+                            RSP is only the Monday side:
+                            <strong>{rA, rB, rC}</strong>.
+                        </p>
+                    </div>
+
+                    <div class="highlight-box warn" style="margin-top: 18px">
+                        <p>
+                            <strong>So the division of labor is:</strong> ALNS
+                            changes the <strong>full horizon incumbent</strong>;
+                            RSP only tries to improve the
+                            <strong>current-day slice</strong> of that
+                            incumbent.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-index="3">
+                <div class="slide-shell slide-shell-lg">
+                    <div class="label">07 — RSP Selection Example</div>
+                    <h2>Then RSP solves a restricted current-day master</h2>
+                    <p class="section-intro section-intro-wide">
+                        Assume Monday has <strong>two route slots</strong>. RSP
+                        only chooses from the routes that already exist in the
+                        current-day pool.
+                    </p>
+
+                    <div class="compare-grid">
+                        <div class="compare-card improved">
+                            <div class="day-head">
+                                <strong>Pool given to RSP</strong>
+                                <span class="mini-tag tag-blue"
+                                    >Monday only</span
+                                >
+                            </div>
+                            <div class="step-stack">
+                                <div class="step-box">
+                                    <strong>Column 1</strong>
+                                    <p>
+                                        <code>rA = [o1, o2]</code>, cost
+                                        <code>38</code>
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Column 2</strong>
+                                    <p>
+                                        <code>rB = [o3]</code>, cost
+                                        <code>10</code>
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Column 3</strong>
+                                    <p>
+                                        <code>rC = [o1, o3]</code>, cost
+                                        <code>31</code>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="compare-card baseline">
+                            <div class="day-head">
+                                <strong>RSP decision</strong>
+                                <span class="mini-tag tag-orange"
+                                    >restricted master</span
+                                >
+                            </div>
+                            <div class="step-stack">
+                                <div class="step-box">
+                                    <strong>Feasibility rule</strong>
+                                    <p>
+                                        Do not cover the same order twice, and
+                                        do not exceed the two Monday slots.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Selected Monday plan</strong>
+                                    <p>
+                                        choose <code>rA + rB</code>. Together
+                                        they cover <code>o1, o2, o3</code> on
+                                        Monday with total route cost
+                                        <code>48</code>.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Updated objective</strong>
+                                    <p>
+                                        ALNS incumbent had Monday
+                                        <code>rC</code> only and kept
+                                        <code>o2</code> for Tuesday. RSP can
+                                        improve the full incumbent from
+                                        <code>111</code> to <code>104</code>
+                                        by replacing Monday with
+                                        <code>rA + rB</code>.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px">
+                        <p>
+                            <strong>RSP model on this slide:</strong> choose
+                            binary variables
+                            <code>x_A, x_B, x_C \in {0,1}</code> to minimize
+                            <code>38x_A + 10x_B + 31x_C</code>, subject to:
+                            each Monday order is covered at most once, and at
+                            most two Monday route slots are used.
+                        </p>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 18px">
+                        <p>
+                            <strong>Why does RSP pick <code>rA + rB</code>?</strong>
+                            <code>rA</code> covers <code>o1,o2</code>,
+                            <code>rB</code> covers <code>o3</code>, they do not
+                            overlap, and together they serve all Monday demand
+                            in two slots. By contrast, <code>rC</code> alone
+                            covers only <code>o1,o3</code>, so <code>o2</code>
+                            is still pushed to Tuesday.
+                        </p>
+                    </div>
+
+                    <div class="highlight-box warn" style="margin-top: 20px">
+                        <p>
+                            <strong>Reading this correctly:</strong> RSP does
+                            not invent new Monday routes and it does not
+                            optimize Tuesday or Wednesday here. It only
+                            recombines the <strong>existing current-day
+                            columns</strong> and then plugs that improved Monday
+                            plan back into the broader incumbent.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-index="4">
+                <div class="slide-shell slide-shell-lg">
+                    <div class="label">08 — From 111 To 104</div>
+                    <h2>How the full incumbent improves after RSP</h2>
+                    <p class="section-intro section-intro-wide">
+                        RSP only changes the <strong>Monday slice</strong>, but
+                        that also changes what still needs to be served on
+                        Tuesday.
+                    </p>
+
+                    <div class="compare-grid">
+                        <div class="compare-card baseline">
+                            <div class="day-head">
+                                <strong>Before RSP</strong>
+                                <span class="mini-tag tag-orange"
+                                    >ALNS incumbent = 111</span
+                                >
+                            </div>
+                            <div class="step-stack">
+                                <div class="step-box">
+                                    <strong>Monday</strong>
+                                    <p>
+                                        <code>rC = [o1, o3]</code>, cost
+                                        <code>31</code>
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Tuesday</strong>
+                                    <p>
+                                        route <code>[o2, o4]</code>, cost
+                                        <code>53</code>
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Other terms</strong>
+                                    <p><code>27</code>, so total = <code>111</code></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="compare-card improved">
+                            <div class="day-head">
+                                <strong>After RSP</strong>
+                                <span class="mini-tag tag-blue"
+                                    >updated incumbent = 104</span
+                                >
+                            </div>
+                            <div class="step-stack">
+                                <div class="step-box">
+                                    <strong>Monday</strong>
+                                    <p>
+                                        choose <code>rA + rB</code> =
+                                        <code>[o1, o2] + [o3]</code>, cost
+                                        <code>48</code>
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Tuesday</strong>
+                                    <p>
+                                        only <code>[o4]</code> remains, so toy
+                                        route cost drops to <code>29</code>
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Other terms</strong>
+                                    <p><code>27</code>, so total = <code>104</code></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box" style="margin-top: 20px">
+                        <p>
+                            <strong>Arithmetic:</strong>
+                            before RSP,
+                            <code>31 + 53 + 27 = 111</code>.
+                            After RSP,
+                            <code>48 + 29 + 27 = 104</code>.
+                        </p>
+                    </div>
+
+                    <div class="highlight-box warn" style="margin-top: 18px">
+                        <p>
+                            <strong>Why does Tuesday drop?</strong> because
+                            <code>o2</code> is no longer deferred to Tuesday.
+                            Once Monday absorbs <code>o2</code>, Tuesday only
+                            needs to serve <code>o4</code>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-index="5">
+                <div class="slide-shell slide-shell-lg">
+                    <div class="label">09 — What RSP Actually Does</div>
+                    <h2>RSP intensifies today's plan, not the full horizon</h2>
+                    <p class="section-intro section-intro-wide">
+                        The current implementation is narrower than the fully
+                        general story of mixing the best routes from all days.
+                    </p>
+
+                    <div class="compare-grid">
+                        <div class="compare-card improved">
+                            <div class="day-head">
+                                <strong>What RSP does now</strong>
+                                <span class="mini-tag tag-blue"
+                                    >implementation-faithful</span
+                                >
+                            </div>
+                            <div class="step-stack">
+                                <div class="step-box">
+                                    <strong>Input</strong>
+                                    <p>
+                                        A pool of candidate routes for the
+                                        <strong>current day</strong>.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Optimization</strong>
+                                    <p>
+                                        Solve a restricted master to choose a
+                                        better compatible subset of those
+                                        current-day routes.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Output</strong>
+                                    <p>
+                                        An improved <strong>today</strong> plan,
+                                        which is inserted back into the broader
+                                        multi-day incumbent.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="compare-card baseline">
+                            <div class="day-head">
+                                <strong>What it does not yet do</strong>
+                                <span class="mini-tag tag-orange"
+                                    >broader idea</span
+                                >
+                            </div>
+                            <div class="step-stack">
+                                <div class="step-box">
+                                    <strong>Not a full horizon master</strong>
+                                    <p>
+                                        It does not jointly recombine Monday,
+                                        Tuesday, and Wednesday routes in one
+                                        full multi-day master problem.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Not global optimality</strong>
+                                    <p>
+                                        It is exact only over the
+                                        <strong>restricted route pool</strong>,
+                                        not over all possible routes.
+                                    </p>
+                                </div>
+                                <div class="step-box">
+                                    <strong>Not the main loop</strong>
+                                    <p>
+                                        ALNS remains the primary search engine;
+                                        RSP is a companion intensification step.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box warn" style="margin-top: 20px">
+                        <p>
+                            <strong>Precise thesis wording:</strong> in the
+                            current 22.02 code, RSP is best described as a
+                            <strong>current-day route-pool intensification
+                            module</strong> embedded inside a broader multi-day
+                            ALNS search.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="slide" data-index="6">
+                <div class="slide-shell slide-shell-lg">
+                    <div class="label">10 — 22.02 Thesis Candidate</div>
+                    <h2>The retained candidate for the 22.02 thesis line</h2>
+                    <p class="section-intro section-intro-wide">
+                        For the presentation, this page only keeps the
+                        <strong>22.02 thesis candidate</strong> and its headline
+                        outcome under the retained Herlev setting.
+                    </p>
+
+                    <div class="benchmark-grid benchmark-grid-single">
+                        <div class="benchmark-card candidate">
+                            <div class="benchmark-kicker">22.02 Thesis Field</div>
+                            <strong>Thesis Candidate Controller</strong>
+                            <p class="benchmark-metric">
+                                Service rate: <span>97.9885%</span>
+                            </p>
+                            <p class="benchmark-metric">
+                                Failed orders: <span>21.0</span>
+                            </p>
+                            <p class="benchmark-metric">
+                                Penalized cost: <span>9788.13</span>
+                            </p>
+                            <p class="benchmark-note">
+                                Retained presentation-facing candidate for the
+                                22.02 thesis line in the Herlev field.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <p>
+                            <strong>Takeaway:</strong> this candidate keeps the
+                            service rate close to <strong>98%</strong> while
+                            limiting failed orders to <strong>21.0</strong> in
+                            the retained Herlev thesis setting.
+                        </p>
+                    </div>
+
+                    <div class="highlight-box warn">
+                        <p>
+                            <strong>Presentation note:</strong> internal run IDs
+                            and side variants are intentionally hidden here so
+                            the slide stays focused on the single retained thesis
+                            candidate.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /deck -->
+
+        <script>
+            const slides = document.querySelectorAll(".slide");
+            const total = slides.length;
+            let current = 0;
+            let isTransitioning = false;
+            const transitionMs = 450;
+
+            function update() {
+                slides.forEach((s, i) => {
+                    s.classList.remove("active", "exit");
+                    if (i === current) s.classList.add("active");
+                });
+                document.getElementById("progressBar").style.width =
+                    ((current + 1) / total) * 100 + "%";
+                document.getElementById("slideCounter").textContent =
+                    current + 1 + " / " + total;
+            }
+
+            function navigate(dir) {
+                if (isTransitioning) return;
+                const next = current + dir;
+                if (next < 0 || next >= total) return;
+                isTransitioning = true;
+                slides[current].classList.add("exit");
+                current = next;
+                setTimeout(() => {
+                    update();
+                    isTransitioning = false;
+                }, transitionMs);
+            }
+
+            document.addEventListener("keydown", (e) => {
+                const tag = e.target.tagName;
+                if (
+                    tag === "INPUT" ||
+                    tag === "TEXTAREA" ||
+                    e.target.isContentEditable
+                )
+                    return;
+                if (
+                    e.key === "ArrowRight" ||
+                    e.key === "ArrowDown" ||
+                    e.key === " "
+                ) {
+                    e.preventDefault();
+                    navigate(1);
+                } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+                    e.preventDefault();
+                    navigate(-1);
+                }
+            });
+
+            // Touch swipe
+            let touchStartX = 0;
+            document.addEventListener("touchstart", (e) => {
+                touchStartX = e.touches[0].clientX;
+            });
+            document.addEventListener("touchend", (e) => {
+                const dx = e.changedTouches[0].clientX - touchStartX;
+                if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
+            });
+
+            update();
+        </script>
+    </body>
+</html>

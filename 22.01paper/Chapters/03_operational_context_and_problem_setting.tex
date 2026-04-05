@@ -1,0 +1,90 @@
+\chapter{Operational Context and Problem Setting}
+\label{ch:operational_context_problem_setting}
+
+This chapter defines the operational setting studied in the thesis and clarifies why the problem should be understood as a rolling-horizon warehouse-distribution planning problem rather than as a static vehicle routing instance. The main point is that feasible and high-service delivery plans are shaped not only by travel times, vehicle capacities, and customer time windows, but also by the temporal interaction between order visibility, daily admission decisions, and warehouse-side execution limits. In particular, the planning system must decide each day which visible orders should be served immediately, which should be deferred within their flexibility window, and how the resulting delivery plan interacts with time-localized pressure on picking, gate, and staging resources.
+
+\section{Operational context and business setting}
+
+The thesis is motivated by a last-mile grocery and parcel-style delivery setting in which customer orders are not all fixed to a single mandatory service day. Instead, many orders can be delivered within a flexible time window spanning several days. This flexibility creates useful room for operational control, since the planner can shift some demand across days to protect service reliability. At the same time, it also creates a harder planning problem, because every day's decision affects the feasible state of future days.
+
+Operationally, the system couples two processes that are often treated separately in simplified models. The first is warehouse preparation: orders must be picked, consolidated, staged, and released through loading gates before vehicles can depart. The second is route execution: vehicles must serve customers subject to travel times, time windows, and capacity limits. In practice, these two processes are tightly linked. A route that looks attractive from a pure transportation perspective may still create an infeasible or highly risky execution pattern if too many of its orders must be prepared in the same short time interval. This motivates treating the problem as a warehouse-distribution system rather than as a route-only optimization task.
+
+This perspective is consistent with the broader literature on vehicle routing with time windows and on integrated warehouse and transport planning. Classical routing models provide the language for time-window-constrained distribution planning \cite{solomon1987vrptw}, while more recent integrated planning work shows that order preparation and transport decisions should not always be optimized independently \cite{vangils2018review,vangils2021integratedpickroute}. The present thesis adopts this integrated operational view, but studies it in a multi-day rolling setting with flexible service days and explicit depot-resource pressure.
+
+\section{Online rolling-horizon setting}
+
+The planning environment is online in the practical sense that orders become actionable over time and decisions are repeated day by day. The system is therefore modeled as a multi-day rolling-horizon process rather than as a full-information static plan over the entire horizon. At the beginning of each planning day $t$, the planner observes the set of \emph{visible orders}: orders that have been released to the system and are eligible to be considered for service decisions on that day. Some of these orders may have become visible only recently, while others may have been deferred from earlier days and are still within their service flexibility window.
+
+Each order is associated with a release day and a due day. The release day indicates when the order first becomes available for planning, while the due day defines the last acceptable service date. The interval between these two dates determines the order's delivery flexibility. This logic creates three core sets at each decision epoch:
+\begin{itemize}
+    \item newly visible orders, which enter the planning system on day $t$,
+    \item carryover orders, which were visible earlier but remain feasible and unserved,
+    \item expired orders, which have reached the end of their service window without timely delivery.
+\end{itemize}
+
+The daily planning decision therefore has an admission-control character. The system must decide which visible orders to prioritize for today's routing stage, which to protect because of urgency or strategic importance, and which can be deferred to preserve future feasibility. This rolling logic is closely related to dynamic and multi-period routing ideas in the literature \cite{pillac2013dvrp,francis2008pvrp,kovacs2014multiperiod}, but the present setting differs from a standard dynamic VRP in two important ways. First, the problem explicitly exploits multi-day service flexibility. Second, execution feasibility depends not only on route-side constraints, but also on warehouse-side resource congestion.
+
+For this reason, the key planning object is not a one-shot route set but a daily state transition. Given the visible order pool on day $t$, the planner chooses a set of orders for attempted service, constructs and repairs a daily plan, records which orders were successfully delivered, and passes the remaining feasible orders forward as carryover into day $t+1$. The quality of a decision must therefore be evaluated both by its immediate service performance and by the future pressure it creates.
+
+\section{Decision layers and daily execution logic}
+
+To organize this rolling problem, the thesis uses a layered decision view. At a conceptual level, each planning day consists of three interacting layers.
+
+\paragraph{Controller layer.}
+The controller determines which visible orders should enter the active planning set on a given day. It can prioritize urgent or protected orders, clip risky flexible demand, and deliberately defer some orders to later days. In this sense, it acts as the cross-day admission and protection mechanism.
+
+\paragraph{Routing layer.}
+Given the orders selected for service, the routing layer constructs daily delivery plans. These plans must satisfy route-side constraints such as vehicle capacity, travel-time feasibility, time windows, and trip structure. In the later integrated solver line, this layer also internalizes depot-resource pressure through bucket-aware penalties and shadow-price-style signals.
+
+\paragraph{Depot-repair layer.}
+Even when a route set is transportation-feasible, it may create excessive pressure on warehouse operations. The depot-repair layer therefore evaluates the time profile implied by the current plan and attempts to reduce overload in critical resource buckets. This layer is especially important when overload is highly localized in time rather than spread smoothly across the day.
+
+The three-layer view is useful because it clarifies that the thesis is not only about route construction. The controller governs which demand is admitted today, the router decides how that admitted demand is arranged into vehicle plans, and the repair layer reshapes the plan if warehouse execution pressure becomes too severe. Later chapters will show that this separation is also helpful analytically: the controller-centered line of work provides a strong retained baseline, while the integrated solver line emerges when bottleneck diagnostics show that route-only or controller-only logic is insufficient.
+
+\section{Physical resource constraints and time-bucket modeling}
+
+A central feature of the thesis problem is that warehouse execution limits are modeled in short time buckets rather than only through coarse daily aggregates. The practical motivation is straightforward: a warehouse may have enough total daily labor or total daily loading capacity in aggregate, yet still fail operationally if too much work is concentrated in a narrow departure wave.
+
+The thesis therefore represents depot-side pressure in 15-minute buckets. For each bucket, the planning system estimates or records the workload induced by the current route plan. Three resource families are especially important:
+\begin{itemize}
+    \item \textbf{Picking capacity}: the amount of order preparation work that can be completed before departure waves,
+    \item \textbf{Gate capacity}: the number of vehicles that can be processed through loading and release infrastructure,
+    \item \textbf{Staging pressure}: the temporary space required to hold prepared orders before loading.
+\end{itemize}
+
+This bucketed view is critical because overload is often temporal rather than global. In the large-scale West instance studied later in the thesis, almost all observed picking overload is concentrated before midday, with the dominant peak occurring in the early morning wave around 05:30--06:15. That means the main issue is not that the system lacks all-day picking capacity, but that too many departures demand preparation in the same short interval. A route plan that is acceptable under route-side constraints may therefore still be operationally problematic if it sharpens that wave.
+
+From a modeling perspective, this motivates a departure from route-only cost evaluation. The planner must care not only about travel distance or assignment feasibility, but also about when route structures induce preparation work, when vehicles compete for gates, and how long staged goods occupy scarce space. This is precisely the kind of integrated planning concern emphasized in the warehouse-routing literature \cite{vangils2018review,vangils2021integratedpickroute}, but here it is embedded inside a rolling-horizon service-control problem.
+
+\section{Routing and service constraints}
+
+On the transportation side, the problem remains a rich vehicle routing task with time-window structure. Each day, the active order set must be assigned to a fleet of vehicles subject to capacity and temporal feasibility. The solver uses travel-time and distance matrices, order demand attributes, and customer service windows to determine whether an insertion or route extension is feasible. Vehicle-load limits restrict total volume and weight, while route timing logic restricts departure and service sequences. In some instances, trip structure also matters, since routes may interact differently with the depot depending on whether they belong to an early or later departure wave.
+
+These constraints place the problem within the broad family of VRPTW and rich-VRP models, for which heuristic search methods such as LNS and ALNS are well established \cite{shaw1998lns,ropke2006alns,pisinger2010lns,subramanian2013richvrp}. However, the present thesis does not study routing in isolation. Instead, route feasibility is only one component of a broader operational feasibility notion. A route is valuable only if it can be executed within the warehouse-distribution system without creating unacceptable overload or excessive future-service risk.
+
+The service side of the problem is therefore naturally multi-period. Orders are not only assigned to routes; they are also assigned, implicitly or explicitly, to service days within their feasible windows. This makes the problem structurally related to periodic or multi-period routing \cite{francis2008pvrp,kovacs2014multiperiod}, but with a stronger operational emphasis on daily admission, carryover, and execution pressure. Moreover, because repeated replanning can destabilize execution and customer-facing reliability, the thesis also treats disciplined carryover and planning continuity as important concerns, in the spirit of consistency-aware routing literature \cite{groer2009consistentvrp,coelho2012consistency}.
+
+\section{Objective and evaluation metrics}
+
+The thesis does not pursue a single route-only objective. Instead, planning quality is evaluated through a combination of service, transportation, and execution-risk metrics. At the highest level, the key outcome is whether eligible orders are delivered within their allowed service windows. This motivates paper-facing metrics such as the number of eligible orders, the number delivered within window, the number of deadline failures, and the resulting within-window service rate.
+
+Beneath these top-level service metrics, the system also tracks execution-oriented indicators. In the retained controller-centered line, important performance indicators include service rate, failed orders, and penalized cost under the established paper-facing evaluation scheme. In the newer integrated solver line, the system additionally records process-sensitive metrics such as total deferred events, depot penalty, final carryover, and overload bucket counts. These latter measures are not merely bookkeeping details. They capture whether the planner is protecting service by creating hidden operational stress, or whether it is genuinely smoothing the interaction between daily demand and depot resources.
+
+Accordingly, the optimization objective can be understood qualitatively as balancing three concerns:
+\begin{enumerate}
+    \item maximize service performance by delivering orders within their feasible windows,
+    \item control transportation effort and route-side inefficiency,
+    \item reduce warehouse-side overload and avoid destabilizing future days through excessive carryover or concentrated execution peaks.
+\end{enumerate}
+
+This layered objective interpretation is important for the later comparison between the retained controller-centered line and the integrated solver line. The two systems can be aligned on top-level service and failure metrics, but not all process metrics are semantically identical. The thesis therefore uses aligned KPI comparisons where appropriate, while still preserving system-native diagnostics when they reveal additional operational structure.
+
+\section{Scope narrowing for the retained thesis line}
+
+The full operational problem described above is broader than what can be defended through one flat collection of experiments. For this reason, the thesis narrows the empirical core of the manuscript around a retained paper-facing backbone and then uses later integrated-solver work to refine the interpretation of the problem.
+
+Concretely, the retained experimental storyline is anchored in the \texttt{22.03controller\_line} workspace. That line provides the final controller-centered progression, the paper-facing evidence backbone, and the strongest claim guardrails for the main thesis results. Its role in the manuscript is therefore foundational: it supplies the disciplined experimental narrative through which admission control and rolling-horizon protection mechanisms are evaluated.
+
+At the same time, the \texttt{22.04fresh\_solver} line sharpens the thesis in a different way. It reconstructs the planning system as an integrated controller-routing-repair solver, adds richer depot diagnostics, and shows that some large-instance failures are best understood as localized depot-wave bottlenecks rather than as generic route-planning weakness. In other words, the retained line provides the paper-facing experimental spine, while the integrated solver line provides deeper architectural and diagnostic understanding.
+
+This division of labor matters for the chapters that follow. Chapter~\ref{chap:methodological_evolution} explains how the thesis method narrowed toward the retained controller-centered line. Chapter~\ref{chap:architecture_retained_method} then shows why diagnostic evidence from the integrated solver line changes the interpretation of the operational bottleneck and motivates a more explicit controller-routing-repair architecture. Together, these two perspectives support the thesis claim that high-quality rolling-horizon delivery planning requires both disciplined cross-day admission logic and explicit treatment of time-localized warehouse resource pressure.

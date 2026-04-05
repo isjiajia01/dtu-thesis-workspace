@@ -1,0 +1,146 @@
+\chapter{Conclusion}
+\label{ch:conclusion}
+
+% This chapter is a writing plan, not a final polished conclusion.
+% Keep the final wording aligned with:
+% - 22.03controller_line/paper/THESIS_EXPERIMENT_WRITING_MAP.md
+% - 22.03controller_line/paper/CLAIM_GUARDRAILS.md
+% - 22.03controller_line/docs/decisions.md
+%
+% Recommended tone:
+% - concise
+% - synthetic rather than repetitive
+% - no new claims or new evidence
+% - no overstatement about physical-world limits
+
+\section{Thesis Summary}
+
+% Goal of this section:
+% Restate the thesis problem in one compact paragraph and summarize the
+% overall research arc from broad formulation to retained final method line.
+
+This thesis studies a rolling-horizon multi-day last-mile delivery problem in which orders have release dates and service windows, decisions are revised day by day, and operational feasibility depends not only on routing quality but also on execution-aware dispatch decisions under limited computational budget.
+
+% Writing plan:
+% 1. Re-state the practical challenge:
+%    - dynamic order visibility
+%    - cross-day service choices
+%    - intra-day routing feasibility
+%    - execution pressure and carryover
+% 2. Explain the thesis arc:
+%    - started from a broader rich rolling-horizon formulation
+%    - narrowed to a retained experimental line for reproducibility
+%    - final main line centers on EXP00, EXP01, and Scenario1 controller progression
+
+\section{Main Contributions}
+
+% Goal of this section:
+% State clearly what the thesis contributes.
+% Keep this framed as thesis contributions, not repository history.
+
+The main contributions of the thesis should be written as a short list of methodological and empirical contributions.
+
+\begin{itemize}
+    \item \textbf{Problem contribution:}
+    formulate the delivery setting as a rolling-horizon multi-day planning problem with flexible service windows, carryover, and execution-sensitive operational constraints.
+
+    \item \textbf{Modeling contribution:}
+    connect business-level order, warehouse, vehicle, and matrix information to a reproducible experimental formulation suitable for thesis-scale evaluation.
+
+    \item \textbf{Method contribution:}
+    present the retained controller progression within the final thesis scope, emphasizing the transition from earlier robust baselines to the final execution-aware and deadline-aware controller line.
+
+    \item \textbf{Experimental contribution:}
+    evaluate the retained line under both normal and pressured operating regimes using the thesis experiment backbone built around \texttt{EXP00} and \texttt{EXP01}.
+
+    \item \textbf{Interpretation contribution:}
+    show that the final gains are best understood as improvements in rolling admission and execution-aware dispatch control rather than as a purely static routing effect.
+\end{itemize}
+
+% Final prose guidance:
+% Convert the bullets above into 1-2 compact paragraphs if the chapter feels too list-heavy.
+
+\section{Key Empirical Takeaways}
+
+% Goal of this section:
+% Summarize only the already-supported findings from the retained thesis line.
+% Do not introduce new tables or unexplained numbers here.
+
+This section should briefly synthesize the most important findings from the results chapter.
+
+\begin{itemize}
+    \item \textbf{Baseline framing:}
+    \texttt{EXP00} defines the normal operating reference, while \texttt{EXP01} defines the single-wave pressure setting that exposes degradation under constrained execution.
+
+    \item \textbf{Method progression:}
+    the retained \texttt{Scenario1} controller line should be summarized as
+    \[
+    v2 \rightarrow v4 \rightarrow v5 \rightarrow v6f \rightarrow v6g
+    \]
+    with each step interpreted as a controlled refinement rather than as an unrelated method replacement.
+
+    \item \textbf{Mechanism summary:}
+    \texttt{v6f} should be described as the execution-aware transition point, while \texttt{v6g} should be described as the final retained deadline-reservation endpoint.
+
+    \item \textbf{Final thesis endpoint:}
+    the final conclusion should identify \texttt{v6g\_v6d\_compute300} as the current paper-facing main candidate, while keeping \texttt{cap05} and \texttt{automode} in supplementary engineering roles, but only using claims already justified earlier in the thesis.
+
+    \item \textbf{Generalization note:}
+    if OOD depot results are already presented and audited in Chapter~7, summarize them briefly here without adding stronger claims than those already established.
+\end{itemize}
+
+% Recommended final phrasing:
+% - "These results suggest ..."
+% - "Within the retained thesis scope ..."
+% - "Under the modeled execution setting ..."
+%
+% Avoid:
+% - "This proves ..."
+% - "This establishes the real physical limit ..."
+% - "This universally generalizes ..."
+
+\section{Limitations of the Present Thesis Scope}
+
+% Goal of this section:
+% End the thesis honestly and professionally.
+% Keep this concise and aligned with the discussion chapter.
+
+The conclusion should explicitly acknowledge that the current thesis operates within a modeled execution environment and a retained experimental scope.
+
+\begin{itemize}
+    \item The final thesis line is intentionally narrower than the broader formulation and solver-design space considered during the research process.
+    \item The retained empirical conclusions should be interpreted within the implemented rolling-horizon simulation and evaluation framework.
+    \item The current evidence should not be written as proof of real-world physical capacity limits, since several operational resources remain simplified relative to full production reality.
+    \item The final controller line should be presented as the best documented thesis endpoint within the retained scope, not as the last possible improvement to the problem.
+\end{itemize}
+
+\section{Future Work}
+
+% Goal of this section:
+% Show credible next steps without reopening the whole thesis.
+% Keep future work connected to the actual limitations and broader 22.02 research foundation.
+
+A short future-work paragraph or list can be structured around the following directions:
+
+\begin{itemize}
+    \item extend the execution model to represent additional operational bottlenecks more explicitly;
+    \item reconnect the retained controller line with richer optimization layers from the broader research program;
+    \item strengthen the evidence base with additional regenerated results, broader depot validation, or tighter solver-side comparisons;
+    \item further investigate exact, bounded, or restricted-master extensions as appendix-level or follow-up methodological work.
+\end{itemize}
+
+% Writing guidance:
+% Keep future work focused and believable.
+% Do not turn this into a second research proposal.
+
+\section{Closing Remark}
+
+% Goal of this section:
+% End with one compact, confident paragraph.
+
+The final paragraph of the chapter should state that the thesis demonstrates the value of treating multi-day delivery planning as a rolling decision problem in which admission, commitment, and execution feasibility must be considered jointly. It should end by emphasizing that the final retained controller line provides a coherent and reproducible thesis outcome within this broader applied optimization setting.
+
+% Optional final sentence pattern:
+% "Overall, the thesis shows that a carefully structured rolling controller,
+% rather than a purely solver-centric daily baseline, provides a stronger and
+% more operationally meaningful approach to the modeled multi-day delivery problem."

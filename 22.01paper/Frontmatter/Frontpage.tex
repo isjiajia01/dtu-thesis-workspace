@@ -1,0 +1,60 @@
+\title{\thesistitle} 
+\author{\thesisauthor} 
+\date{\thedate} 
+
+\begin{titlepage}
+
+\newgeometry{left=11mm,right=11mm,top=50mm,bottom=0pt}
+\pagecolor{frontbackcolor}
+\color{\frontpagetextcolour}
+
+{ % Thesis title (to change see Setup/Settings.tex) 
+\Huge
+\begin{tabular}{p{0.96\linewidth}}
+\raggedright
+\TitleFont{\thesistitle}   \\[2mm]
+{\LARGE\titlefont{\thesissubtitle}} \bigskip \\ 
+{\huge \documenttype}
+\end{tabular}
+}
+
+% DTU department (to change see Setup/Settings.tex) 
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north east, 
+      xshift=-10mm, 
+      yshift=-12mm] 
+      at (current page.north east) 
+      {
+        \color{\frontpagetextcolour}
+        \begin{tabular}{r} 
+        \textbf{\department} \\ 
+        \departmentdescriber
+        \end{tabular}
+      }; 
+\end{tikzpicture}
+
+% DTU + Mover logos
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=north west, 
+      xshift=8.9mm, 
+      yshift=-8.3mm] 
+     at (current page.north west) 
+     {\begin{tabular}{@{}l@{\hspace{3.2mm}}l@{}}
+        \includegraphics[width=14.75mm,keepaspectratio]{Pictures/Logos/\dtulogocolour_\targetcolourmodel.pdf} &
+        \raisebox{3.8mm}{\includegraphics[width=22mm,keepaspectratio]{Pictures/Logos/mover_logo_white.pdf}}
+      \end{tabular}}; 
+\end{tikzpicture}
+
+% Cover photo
+\begin{tikzpicture}[remember picture,overlay]
+\node[anchor=south, % anchor is bottom of picture
+      xshift=0pt, 
+      yshift=-2.9mm] % shifting picture to actually be at the bottom of the page
+     at (current page.south) % placement at bottom of the page
+     {\includegraphics[height=18.9cm,keepaspectratio]{Pictures/DTU_stock_photo.jpg}};
+\end{tikzpicture}
+
+
+
+
+\end{titlepage}

@@ -1,0 +1,10 @@
+{
+  "endpoint_key": "scenario1_robust_v6g_deadline_reservation_v6d_duration_probe",
+  "use_robust_controller": true,
+  "robust_horizon_days": 3,
+  "robust_controller_version": "v6g_deadline_reservation_value_rerank",
+  "v6_value_model_path": "data/results/EXP_EXP01/_analysis_v6d_value/v6d_value_model.json",
+  "base_compute": 300,
+  "high_compute": 300,
+  "vehicle_max_durations": [720, 720, 720, 720, 720, 720, 720, 720, 720, 720, 720, 720, 720, 720, 720, 720, 720]
+}

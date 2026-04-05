@@ -1,0 +1,545 @@
+\chapter{Operational Context and Problem Setting}
+\label{ch:operational_context_problem_setting}
+
+% Chapter purpose:
+% This chapter should bridge the business setting and the formal optimization model.
+% It should answer four questions:
+% 1) What real operational setting motivates the thesis?
+% 2) What data and operational semantics define the planning environment?
+% 3) What decisions must be made in the rolling-horizon system?
+% 4) What is the final formal problem statement used by the thesis?
+%
+% Main source material to use when rewriting this plan into full prose:
+% - 22.02thesis/problem.md
+% - 22.02thesis/docs/raw_data_intake_20260305.md
+% - 22.02thesis/model/formulation.md
+% - 22.02thesis/model/xlsx_field_to_constraints.md
+% - 22.03controller_line/problem.md
+% - 22.03controller_line/docs/raw_data_intake_20260305.md
+%
+% Writing principle:
+% - Use 22.02 for depth and rigor.
+% - Use 22.03 for concise retained thesis scope.
+% - Keep the chapter focused on one coherent problem, not two projects.
+
+This chapter introduces the operational setting behind the thesis and translates that setting into a precise rolling-horizon planning problem. The goal is to move from the practical delivery context to a formal statement of the decisions, objectives, constraints, and modeling assumptions that define the thesis scope.
+
+\section{Chapter role and intended contribution}
+\label{sec:chapter03_role}
+
+% TODO:
+% Explain that this chapter has two jobs:
+% (i) establish the real-world operating context,
+% (ii) define the formal planning problem.
+%
+% Suggested message:
+% - This is not a static single-day VRP.
+% - The system replans daily under partial information.
+% - Orders have release dates and service windows.
+% - Routing feasibility alone is insufficient; cross-day timing and operational constraints matter.
+%
+% Keep this section short and orienting.
+
+\noindent\textbf{Planned writing points:}
+\begin{itemize}
+    \item Position the thesis as a multi-day rolling-horizon last-mile delivery problem.
+    \item Clarify that the problem combines order selection, day assignment, and day-level routing.
+    \item State that this chapter first explains the operational context and then formalizes the retained thesis problem.
+    \item Signal that the formulation is intentionally broader than the final retained experimental line, while remaining consistent with it.
+\end{itemize}
+
+\section{Operational background}
+\label{sec:chapter03_operational_background}
+
+% TODO:
+% Introduce the business setting:
+% - deliveries are planned over multiple days,
+% - orders are not all known at the start,
+% - some orders are fixed-day, some flexible-day,
+% - depot-side operations influence what is executable,
+% - repeated replanning can create instability.
+%
+% This section should feel concrete and operational, not mathematical yet.
+
+\subsection{Rolling daily planning in last-mile delivery}
+\label{subsec:chapter03_rolling_daily_planning}
+
+% TODO:
+% Write a narrative paragraph explaining:
+% - each day, the planner sees released-but-undelivered orders,
+% - it must choose what to attempt today,
+% - routes are then constructed subject to time/capacity/depot feasibility,
+% - unserved work can carry over,
+% - future plans remain tentative.
+%
+% Good place to motivate why static planning is insufficient.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Daily replanning under incomplete future information.
+    \item Separation between visible demand and future unreleased demand.
+    \item Interaction between today's execution and tomorrow's workload.
+    \item Importance of balancing immediate service against future deadline risk.
+\end{itemize}
+
+\subsection{Why the problem is richer than a standard VRP}
+\label{subsec:chapter03_richer_than_standard_vrp}
+
+% TODO:
+% Explain the additional dimensions beyond a standard VRP/VRPTW:
+% - release dates and due dates,
+% - flexible service windows,
+% - heterogeneous fleet,
+% - depot loading/unloading and gate limits,
+% - carrying work into future days,
+% - plan stability / churn.
+%
+% This subsection is important for motivating the contribution.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item The system must decide both \emph{when} and \emph{how} to serve.
+    \item Vehicle routing is embedded inside a multi-day planning loop.
+    \item Depot resource constraints create inter-route coupling.
+    \item Reoptimization quality includes both service outcomes and planning stability.
+\end{itemize}
+
+\section{Data origin and operational semantics}
+\label{sec:chapter03_data_and_semantics}
+
+% TODO:
+% Build this section mainly from raw_data_intake_20260305.md and xlsx_field_to_constraints.md.
+% This section should convince the reader that the model is grounded in actual operational data semantics.
+%
+% Important points to include:
+% - raw workbook structure,
+% - order/warehouse/vehicle sheets,
+% - date ranges and benchmark scale,
+% - distinction between dispatch window and picking window,
+% - depot gates, staging space, picking throughput,
+% - use of road-network travel matrices.
+
+\subsection{Source workbook and benchmark scope}
+\label{subsec:chapter03_source_workbook}
+
+% TODO:
+% Mention:
+% - canonical workbook structure,
+% - relevant sheets,
+% - benchmark depot focus (Herlev as main benchmark),
+% - other depots for transfer/OOD context if needed.
+%
+% Keep concrete but concise.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Describe the raw workbook as the operational source of orders, warehouse parameters, and vehicle settings.
+    \item Identify the main benchmark depot used in the thesis main line.
+    \item Briefly note the presence of additional depots that later support cross-depot validation.
+\end{itemize}
+
+\subsection{Operational interpretation of warehouse and depot fields}
+\label{subsec:chapter03_operational_field_interpretation}
+
+% TODO:
+% Key semantic points to make explicit:
+% - EarliestArrival / LatestDeparture define departure logic.
+% - PickingOpeningHours / PickingClosingHours define depot-side preparation capability.
+% - Night pre-loading may be possible even if dispatch starts later.
+% - Gates, staging, and throughput should be explained in plain language before formalization.
+%
+% This subsection is essential because it grounds the model.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Explain the distinction between preparation activities and physical vehicle departure.
+    \item Clarify how gate count, staging space, and picking throughput affect execution feasibility.
+    \item State that these semantics motivate depot-side constraints in the formulation.
+\end{itemize}
+
+\subsection{Travel data and matrix realism}
+\label{subsec:chapter03_travel_data}
+
+% TODO:
+% Explain the use of OSRM / road-network matrices and why they matter.
+% Contrast this with Euclidean or Haversine approximations only if needed.
+%
+% This subsection should connect data realism to experimental credibility.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item State that travel times and distances are based on road-network matrices.
+    \item Explain why matrix-based travel is more appropriate for thesis-grade results than geometric approximation.
+    \item Note that processed matrices are part of the reproducible experiment pipeline.
+\end{itemize}
+
+\section{Planning entities and system state}
+\label{sec:chapter03_entities_and_state}
+
+% TODO:
+% Introduce the main entities before equations:
+% - days,
+% - orders,
+% - vehicles,
+% - depot resources,
+% - travel network,
+% - carryover state,
+% - previous plan snapshot for stability-aware replanning.
+%
+% This section should make the notation later feel natural.
+
+\subsection{Orders and service windows}
+\label{subsec:chapter03_orders_and_windows}
+
+% TODO:
+% Define in words:
+% - release day,
+% - due day,
+% - feasible service window,
+% - fixed-day vs flexible-day orders,
+% - service time and demand dimensions.
+%
+% Good place to introduce the thesis notation informally.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Each order has a release date, a deadline boundary, and a feasible service set.
+    \item Some orders are effectively fixed-day; others can be scheduled across multiple feasible days.
+    \item Order attributes include service time, time windows, and demand quantities.
+\end{itemize}
+
+\subsection{Fleet and depot resources}
+\label{subsec:chapter03_fleet_and_depot_resources}
+
+% TODO:
+% Explain:
+% - heterogeneous vehicle types,
+% - daily vehicle availability,
+% - multi-dimensional capacity,
+% - route duration limits,
+% - optional multi-trip execution,
+% - depot-side loading/unloading and dispatch constraints.
+%
+% Keep the prose operational, not yet fully mathematical.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Vehicle availability varies by type and by day.
+    \item Vehicle feasibility depends on capacity, work duration, and dispatch timing.
+    \item Depot constraints couple routes through shared operational resources.
+\end{itemize}
+
+\subsection{Rolling state and carryover}
+\label{subsec:chapter03_rolling_state_and_carryover}
+
+% TODO:
+% Explain the evolution of:
+% - visible orders,
+% - selected attempts,
+% - delivered orders,
+% - carryover,
+% - tentative future plan,
+% - previous plan reference for churn/stability.
+%
+% This subsection is important for connecting operations to control.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item The planner acts on the visible-but-undelivered order set for the current day.
+    \item Orders attempted but not delivered may become carryover.
+    \item Future-day plans can be revised, whereas current-day execution is committed.
+    \item Previous plans may be retained as references for stability-aware replanning.
+\end{itemize}
+
+\section{Decision process in the rolling-horizon system}
+\label{sec:chapter03_decision_process}
+
+% TODO:
+% This section should explain the daily loop.
+% Suggested structure:
+% 1. observe state
+% 2. choose today's candidate/attempt set or assignment logic
+% 3. solve day-level routing
+% 4. execute current day
+% 5. update carryover and move the horizon
+%
+% This becomes the conceptual backbone for the later controller/system chapters.
+
+\subsection{Daily observation and decision timing}
+\label{subsec:chapter03_daily_observation}
+
+% TODO:
+% Explain when decisions happen and what is known at each decision epoch.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item At each decision day, only currently released demand is observable.
+    \item The planner must make a decision under limited future information and finite compute budget.
+\end{itemize}
+
+\subsection{Selection, routing, and execution}
+\label{subsec:chapter03_selection_routing_execution}
+
+% TODO:
+% Explain the separation between:
+% - higher-level order/day decision logic,
+% - lower-level daily routing execution.
+%
+% This is a strong place to foreshadow later controller chapters.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item A higher-level policy decides what to prioritize or attempt.
+    \item A lower-level routing solver constructs executable routes for the day.
+    \item The realized delivered set may differ from the attempted set when execution is constrained.
+\end{itemize}
+
+\subsection{Commitment and replanning across days}
+\label{subsec:chapter03_commitment_and_replanning}
+
+% TODO:
+% Explain:
+% - current day is committed,
+% - future days are tentative,
+% - replanning can create beneficial flexibility but also instability.
+%
+% This is where churn/stability motivation becomes natural.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Rolling replanning improves adaptivity but can introduce unnecessary plan changes.
+    \item The thesis therefore treats plan stability as a meaningful secondary concern.
+\end{itemize}
+
+\section{Objectives, performance criteria, and modeling priorities}
+\label{sec:chapter03_objectives_and_metrics}
+
+% TODO:
+% Explain the layered objective structure:
+% - service success / deadline satisfaction,
+% - routing cost / efficiency,
+% - carryover and failure control,
+% - planning stability / churn,
+% - runtime or computational realism.
+%
+% Differentiate between operational KPIs and optimization objective components if useful.
+
+\subsection{Primary operational goals}
+\label{subsec:chapter03_primary_goals}
+
+% TODO:
+% Likely goals:
+% - maximize service / reduce failures,
+% - avoid overdue orders,
+% - keep routing cost reasonable,
+% - respect operational feasibility.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item High service quality under capacity pressure.
+    \item Low overdue or failed-order counts.
+    \item Feasible and efficient daily execution.
+\end{itemize}
+
+\subsection{Secondary goals: stability and interpretability}
+\label{subsec:chapter03_secondary_goals}
+
+% TODO:
+% Bring in PlanChurn here.
+% Explain why solution quality is not just cost or service rate.
+%
+% Good place to justify stability-aware evaluation.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Repeated plan changes can degrade operational usability.
+    \item Stability-aware replanning therefore matters even when service metrics are strong.
+\end{itemize}
+
+\subsection{Evaluation metrics}
+\label{subsec:chapter03_evaluation_metrics}
+
+% TODO:
+% Provide a placeholder list of final KPI categories:
+% - service rate
+% - failed / overdue orders
+% - carryover
+% - travel time / cost
+% - runtime
+% - plan churn
+%
+% Later chapters can define exact reporting.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Service-related metrics.
+    \item Cost and travel-efficiency metrics.
+    \item Carryover and deadline-risk metrics.
+    \item Runtime and reproducibility metrics.
+    \item Stability metrics such as plan churn.
+\end{itemize}
+
+\section{Formal problem statement}
+\label{sec:chapter03_formal_problem_statement}
+
+% TODO:
+% This is the main formal section.
+% It should be based mainly on 22.02thesis/model/formulation.md.
+%
+% Suggested structure:
+% - sets and indices
+% - parameters
+% - decision variables
+% - objective
+% - constraints
+%
+% Keep the exposition readable; do not dump notation without narrative.
+% If the full formulation becomes too long, put complete notation tables in appendix and keep the main text focused.
+
+\subsection{Sets, indices, and parameters}
+\label{subsec:chapter03_sets_parameters}
+
+% TODO:
+% Introduce the core sets and parameters in prose first, then maybe a notation table later.
+% Important elements:
+% - planning days
+% - orders
+% - vehicles / vehicle types
+% - feasible service windows
+% - travel matrix
+% - depot buckets/resources
+% - previous-plan references
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Define the planning horizon and rolling window.
+    \item Define order-level feasibility and demand parameters.
+    \item Define fleet availability and capacity parameters.
+    \item Define depot-side timing and resource parameters.
+    \item Define prior-plan references for stability-aware replanning.
+\end{itemize}
+
+\subsection{Decision variables}
+\label{subsec:chapter03_decision_variables}
+
+% TODO:
+% Describe the main decision layers:
+% - order-to-day assignment,
+% - route selection / arc use,
+% - unserved/deferred markers,
+% - optional churn indicators,
+% - trip timing variables.
+%
+% Explain that the exact compact form used in the thesis may vary by solution approach.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Variables for assigning orders to service days.
+    \item Variables for routing and vehicle usage.
+    \item Variables for unserved or deferred demand if soft feasibility is allowed.
+    \item Variables linking current plans to previous plans for stability measurement.
+\end{itemize}
+
+\subsection{Objective formulation}
+\label{subsec:chapter03_objective_formulation}
+
+% TODO:
+% Explain the weighted objective in a readable way:
+% - travel/service cost,
+% - infeasibility or unserved penalty,
+% - stability penalty,
+% - optional depot-overload penalty.
+%
+% Avoid overspecifying weights here unless they are fixed in the retained experiments.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item A primary cost-and-service objective.
+    \item Penalties for deferred, failed, or overdue service.
+    \item Optional stability terms to discourage unnecessary replanning churn.
+    \item Optional operational overload penalties when relevant.
+\end{itemize}
+
+\subsection{Constraint families}
+\label{subsec:chapter03_constraint_families}
+
+% TODO:
+% Organize the constraints by family:
+% - coverage / service-day feasibility
+% - route feasibility
+% - vehicle availability
+% - time windows
+% - duty time
+% - capacity
+% - depot dispatch/gate/staging/throughput
+% - rolling commitment rules
+% - stability linkage
+%
+% This subsection should likely become the mathematically richest part of the chapter.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Each order must be served within its feasible service set or incur an explicit penalty if that is permitted.
+    \item Vehicle routes must satisfy time-window, duration, and capacity limits.
+    \item Fleet availability and optional multi-trip limits must be respected.
+    \item Depot-side operations constrain the simultaneous feasibility of route departures and handling.
+    \item Rolling-horizon execution commits the current day while leaving future days adjustable.
+\end{itemize}
+
+\section{Scope narrowing for the retained thesis line}
+\label{sec:chapter03_scope_narrowing}
+
+% TODO:
+% Very important bridging section.
+% Explain:
+% - the broader problem statement is intentionally rich,
+% - the final thesis later narrows to a retained experimental storyline,
+% - that retained line is still a valid and meaningful slice of the broader problem.
+%
+% This is how the chapter stays natural when connected to 22.03.
+
+\subsection{Broader formulation versus retained experiment scope}
+\label{subsec:chapter03_broader_vs_retained_scope}
+
+% TODO:
+% Suggested points:
+% - The formal model reflects the broader research program.
+% - The final thesis experiments focus on a narrower, reproducible controller line.
+% - Narrowing scope does not contradict the broader formulation; it instantiates it.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item The formulation in this chapter captures the full operational richness considered during the research process.
+    \item Later chapters focus on a retained experimental line chosen for clarity, reproducibility, and thesis coherence.
+    \item The retained line should be presented as a controlled narrowing of this broader problem, not as a different problem.
+\end{itemize}
+
+\subsection{What later chapters will keep fixed}
+\label{subsec:chapter03_later_fixed_elements}
+
+% TODO:
+% Mention, without overdoing results:
+% - retained experiment family
+% - rolling-horizon structure
+% - matrix-based travel
+% - core operational setting
+% - narrowed controller line in later chapters
+%
+% Keep this as a bridge, not a results section.
+
+\noindent\textbf{Planned content:}
+\begin{itemize}
+    \item Later chapters will keep the operational setting of this chapter fixed.
+    \item The main changes across methods will concern planning logic and controller behavior, not the definition of the operational world.
+\end{itemize}
+
+\section{Chapter summary}
+\label{sec:chapter03_summary}
+
+% TODO:
+% End with a concise bridge to the next chapter.
+% Suggested message:
+% - this chapter defined the operational world and formal problem,
+% - the next chapter explains the implemented architecture and method stack used to address it.
+
+\noindent\textbf{Planned closing paragraph:} This chapter should conclude by summarizing the operational context, the rolling-horizon decision structure, and the main formulation components. It should then point forward to the architecture and methodology chapters, where the thesis explains how this problem setting is instantiated and solved within the retained experimental line.
